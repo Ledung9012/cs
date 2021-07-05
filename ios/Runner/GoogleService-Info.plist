@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>110419069353-1k1vsld12ee7uvmi5521crsb6fedr3ma.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.110419069353-1k1vsld12ee7uvmi5521crsb6fedr3ma</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBHDTosjgcfPagquNdk3Bva1BBH_fzK3O4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>110419069353</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>ledung.wind.mobile</string>
+	<key>PROJECT_ID</key>
+	<string>k-mobile-6e153</string>
+	<key>STORAGE_BUCKET</key>
+	<string>k-mobile-6e153.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:110419069353:ios:1c763e52f0acc30da35cb8</string>
+</dict>
+</plist>
