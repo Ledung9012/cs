@@ -1,17 +1,27 @@
+import 'package:mobile/instance/app_instance.dart';
+
 class Store {
-  int id  = -1;
+  int id = -1;
   String name = "Tiki";
   String image = "";
   String logo = "";
   String url = "";
-  bool selected   = false;
+  bool selected = false;
 
   Store.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    image = json['image'] ;
-    logo = json['logo'] ;
-    url = json['url'] ;
+    image = json['image'];
+    logo = json['logo'];
+    url = json['url'];
+  }
+
+  String affiliateURL() {
+    var affLink = app.accessTradeURL.replaceAll("<url>", url);
+    affLink = affLink.replaceAll("<utm_source>", 12.toString());
+
+    print("LINK : ${affLink}");
+    return affLink;
   }
 
   Store(this.id, this.name);
@@ -24,10 +34,10 @@ class Store {
     return data;
   }
 
-  String imageURL (){
-    if(this.image.length > 0) {
-      return "http://cashback.lolshop.vn/storage/" + this.image;
-    }else {
+  String imageURL() {
+    if (this.image.length > 0) {
+      return app.cmsImgeURL() + this.image;
+    } else {
       return this.logo;
     }
   }
@@ -35,5 +45,4 @@ class Store {
   static List<Store> list(List json) {
     return json.map((entry) => Store.fromJson(entry)).toList();
   }
-
 }

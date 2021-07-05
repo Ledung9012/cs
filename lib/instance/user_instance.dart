@@ -12,6 +12,10 @@ class UserInstance {
 
   int get userId => _user.id;
 
+  var logged = false;
+
+  var acceptLigal = false;
+
   factory UserInstance() {
     return _singleton;
   }
@@ -21,19 +25,18 @@ class UserInstance {
   Future<bool> alreadyLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getInt('USERID');
-    return id != null;
+    logged = (id != null);
+    if (logged) {
+      _user.id = id!;
+    }
+    return logged;
   }
 
-  bool isGuest() {
-    alreadyLogin().then((value) {
-      return value!;
-    });
-  }
-
-  void login(CSUser user) async {
-    _user = user;
+  Future<bool> login(int userID) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt("USERID", user.id);
+    prefs.setInt("USERID", userID);
+    _user.id = userID;
+    return true;
   }
 
   void logout() async {

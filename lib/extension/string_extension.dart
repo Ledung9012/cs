@@ -43,6 +43,10 @@ extension DateTimeParsing on DateTime {
 
 extension DoubleExtension on double {
   String currencyValue() {
+    if(this == 0)
+      {
+        return "-";
+      }
     return currencyFormat.format(this);
   }
 }

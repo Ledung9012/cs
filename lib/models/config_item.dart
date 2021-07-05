@@ -7,5 +7,4 @@ class ConfigItem {
   var name = "";
   var key = "";
   dynamic value ;
-
 }

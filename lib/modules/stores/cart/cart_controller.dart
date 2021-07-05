@@ -2,25 +2,40 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:mobile/instance/templace_instance.dart';
+import 'package:mobile/models/address.dart';
 import 'package:mobile/models/order.dart';
 import 'package:mobile/models/product.dart';
+import 'package:mobile/modules/account/address/address_add_controller.dart';
+import 'package:mobile/modules/account/address/address_add_view.dart';
 import 'package:mobile/modules/stores/cart/cart_instance.dart';
 import 'package:mobile/modules/stores/store_provider.dart';
 
 class CartController extends GetxController {
+  TextEditingController couponEdit = TextEditingController();
+
   var length = cart.products.length.obs;
+  var productPrice = 0.0.obs;
+  var shippingPrice = 0.0.obs;
+  var couponPrice = 0.0.obs;
+  var price = 0.0.obs;
+  var _address = Address().obs;
+
+  bool get isEmptyAddress => _address.value.isEmpty;
 
   StoreProvider _provider = StoreProvider();
-  TextEditingController nameEdit = TextEditingController();
-  TextEditingController phoneEdit = TextEditingController();
-  TextEditingController addressEdit = TextEditingController();
 
+  get address => _address.value;
 
-  Product productIndex(int index) => cart.products[index];
+  set address(value) {
+    _address.value = value;
+    _address.refresh();
+
+    print("address refresh ");
+  }
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     length.value = cart.products.length;
   }
@@ -45,45 +60,38 @@ class CartController extends GetxController {
 
   void submit(
       {required Function onSuccess, required Function(String) onFailure}) {
-    String name = nameEdit.text;
-    String phone = phoneEdit.text;
-    String address = addressEdit.text;
-
-
-    if (name.isEmpty) {
-      onFailure("Vui lòng nhập tên người nhận");
-      return;
-    }
-
-    if (phone.isEmpty) {
-      onFailure("Vui lòng nhập số điện thoại người nhận");
-      return;
-    }
-
-    if (name.isEmpty) {
-      onFailure("Vui lòng nhập địa chỉ người nhận");
-      return;
-    }
-    var productJson = cart.products.map((e) {
-      return e.toJson();
-    });
-
-
     OrderCreateRequest request = OrderCreateRequest();
     request.products = jsonEncode(cart.products);
-    request.name = name;
-    request.phone = phone;
-    request.address = address;
+    request.name = "name";
+    request.phone = "phone";
+    request.address = "address";
     request.userId = 2;
 
-
     StoreProvider.orderCreate(
-        request: request, success: () {
+        request: request,
+        success: () {
           onSuccess();
-    }, onError: (error) {
+          clear();
+        },
+        onError: (error) {
+          onFailure(error);
+        });
+  }
 
-      onFailure(error);
+  void clear() {}
 
-    });
+  void goAdd() {
+    Get.put(AddressAddController());
+
+    Get.to(AddressAddView(
+        addState: AddressAddType.NONE,
+        item: null,
+        onComplete: (value) {
+          address = value;
+        }));
+  }
+
+  void submitCoupt() {
+    Template.dialogError("Mã khuyến mãi không hợp lệ");
   }
 }

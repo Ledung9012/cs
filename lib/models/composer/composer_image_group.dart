@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,6 @@ import 'package:mobile/models/file_upload.dart';
 import 'package:mobile/services/api_response.dart';
 
 extension ComposerImageGroup on ComposerNode {
-
   Widget imagesView() {
     return Container(
       margin: EdgeInsets.only(left: 16, right: 16),
@@ -23,7 +23,12 @@ extension ComposerImageGroup on ComposerNode {
       ),
     );
   }
+
   Widget imagesEditing() {
+    if (value == null) {
+      value = List.empty();
+    }
+
     return Container(
       margin: EdgeInsets.only(top: 16),
       child: Row(
@@ -88,7 +93,9 @@ extension ComposerImageGroup on ComposerNode {
       borderRadius: BorderRadius.circular(4),
       child: Container(
         child: FittedBox(
-          child: value[index],
+          child: CachedNetworkImage(
+            imageUrl: value[index].path,
+          ),
           fit: BoxFit.cover,
         ),
         decoration: BoxDecoration(
@@ -109,7 +116,7 @@ extension ComposerImageGroup on ComposerNode {
           await MultipartFile.fromFile(pickedFile.path, filename: fileName);
       FormData formData = FormData.fromMap({'media': fileUpload});
       return await Dio()
-          .post("http://apiaccesstrade.lolshop.vn/upload", data: formData)
+          .post("http://apicashback.lolshop.vn/upload", data: formData)
           .then((dynamic result) {
         ApiResponse apiResponse =
             ApiResponse.fromJson(jsonDecode(result.toString()));
@@ -118,7 +125,7 @@ extension ComposerImageGroup on ComposerNode {
           value = List.empty();
         }
         if (dtos.length > 0) {
-          (value as List).add(value);
+          (value as List).add(dtos[0]);
         }
       }).onError((error, stackTrace) {
         print("response error : ${error}");

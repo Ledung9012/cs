@@ -82,7 +82,7 @@ extension ComposerImage on ComposerNode {
           await MultipartFile.fromFile(pickedFile.path, filename: fileName);
       FormData formData = FormData.fromMap({'media': fileUpload});
       return await Dio()
-          .post("http://apiaccesstrade.lolshop.vn/upload", data: formData)
+          .post("http://apicashback.lolshop.vn/upload", data: formData)
           .then((dynamic result) {
         ApiResponse apiResponse =
             ApiResponse.fromJson(jsonDecode(result.toString()));
@@ -102,7 +102,7 @@ extension ComposerImage on ComposerNode {
   Widget imageView() {
     print("---------------------value : $value");
     return Container(
-      margin: EdgeInsets.only(left: 16, right: 16),
+      margin: EdgeInsets.only(left: 16, right: 16,bottom: 16),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: Container(

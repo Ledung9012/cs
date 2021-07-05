@@ -165,7 +165,7 @@ class WithdrawView extends GetView<WithdrawController> {
                   Template.snackSuccess("Rút tiền thành công");
                 }, (error){
 
-                  Template.snackError(error);
+                  Template.dialogError(error);
                 });
               },
               child: Text("Xác Nhân"),

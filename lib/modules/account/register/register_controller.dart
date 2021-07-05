@@ -1,14 +1,14 @@
+import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:accesstrade/Instance/user_instance.dart';
-import 'package:accesstrade/pages/login/providers/register_provider.dart';
 import 'package:mobile/instance/user_instance.dart';
 import 'package:mobile/modules/account/account_provider.dart';
+import 'dart:convert'; // for the utf8.encode method
+
 
 class RegisterController extends GetxController {
   String phoneNumber = "0971568901";
-
   final nameEditController = TextEditingController();
   final passwordEditController = TextEditingController();
   final passwordConfirmEditController = TextEditingController();
@@ -45,17 +45,13 @@ class RegisterController extends GetxController {
 
     if (passwordConfirmEditController.text != passwordEditController.text) {
       errorMessage =
-      "Mật khẩu và xác nhận không giống nhau. Vui lòng kiểm tra lại";
+          "Mật khẩu và xác nhận không giống nhau. Vui lòng kiểm tra lại";
       return errorMessage;
     }
-
     return errorMessage;
   }
 
-  void register(
-      Function(String) onSuccess,
-      Function(String) onError,
-      ) {
+  void register(Function(String) onSuccess, Function(String) onError) {
     // Register Validation ;
     String error = validate();
     if (error.length > 0) {
@@ -63,20 +59,22 @@ class RegisterController extends GetxController {
       return;
     } else {
 
+      String username = phoneNumber;
+      String password = passwordConfirmEditController.text;
+      String name = nameEditController.text;
 
-      String username =  phoneNumber ;
-      String password =  passwordConfirmEditController.text; ;
-      Get.back(id: 0);
+
+      var bytes = utf8.encode(password); // data being hashed
+      var digest = md5.convert(bytes);
 
 
-      registerProvider.register(username, password, (user) {
-
-        UserInstance().login(user);
-        onSuccess("");
+      registerProvider.register(username, digest.toString(), name, (userID) {
+        UserInstance().login(userID).then((value) {
+          onSuccess("");
+        });
       }, (error) {
         onError(error);
       });
-
     }
   }
 }

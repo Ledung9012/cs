@@ -43,8 +43,17 @@ class CartInstance {
 
   }
 
+
+  get empty => (products.length == 0);
+
   void remove(int index){
     products.removeAt(index);
+    ProductController productController =  Get.put(ProductController()) ;
+    productController.refresh();
+  }
+
+  void removeAll(){
+    products.clear();
     ProductController productController =  Get.put(ProductController()) ;
     productController.refresh();
   }

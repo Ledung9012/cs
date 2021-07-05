@@ -1,164 +1,205 @@
-
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:get/get.dart';
 import 'package:mobile/instance/templace_instance.dart';
+import 'package:mobile/modules/news/detail/news_detail_controller.dart';
+import 'package:mobile/modules/news/detail/news_detail_view.dart';
 import 'package:mobile/modules/news/news_controller.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
-
+import 'package:mobile/modules/news/news_provider.dart';
 
 class NewsView extends GetView<NewsController> {
-  AutoScrollController _scrollController = AutoScrollController();
+
+
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onHorizontalDragEnd: (val) {
-        if (val.primaryVelocity! < 0) {
-          controller.next();
-        } else {
-          controller.previous();
-        }
-      },
-      child: Container(
-        color: Template.backgroundColor,
-        child: CustomScrollView(
-          slivers: [
-            SliverStickyHeader(
-              header: Container(
-                  padding: EdgeInsets.only(top: 24, left: 12, right: 12),
-                  height: 60,
-                  width: double.infinity,
-                  color: Template.primaryColor,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Tin Tức",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                    ],
-                  )),
+    Widget addButton = GestureDetector(
+        onTap: () {
+          controller.create();
+        },
+        child: Icon(
+          Icons.post_add_rounded,
+          size: 24,
+        ));
+
+    Widget bookMark = GestureDetector(
+        onTap: () {
+          controller.favorToggle();
+        },
+        child: Icon(
+          Icons.bookmark_border_rounded,
+          size: 24,
+        ));
+    Widget separator = SizedBox(
+      width: 12,
+    );
+
+
+    return MaterialApp(
+      theme: ThemeData(primaryColor: Template.primaryColor),
+      debugShowCheckedModeBanner: false,
+      home: Obx(() {
+        print(
+            "build  controller.categories.length ${controller.initalTabbarIndex()}");
+        return DefaultTabController(
+          length: controller.categoryLength,
+          initialIndex: controller.initalTabbarIndex(),
+          child: Scaffold(
+            body: NestedScrollView(
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return [
+                  Template.sliderAppBar(
+                      title: "cửa hàng",
+                      items: controller.categories
+                          .map((item) => item.name)
+                          .toList(),
+                      menu: [separator, addButton])
+                ];
+              },
+              body: TabBarView(
+
+                children: controller.categories
+                    .map((item) => ItemView(
+                          id: item.id,
+                          favor: controller.favor.value,
+                        ))
+                    .toList(),
+              ),
             ),
-            SliverStickyHeader(
-              sticky: true,
-              header: buildCategory(),
-              sliver: sliverGrid(),
-            )
-          ],
-        ),
-      ),
+          ),
+        );
+      }),
     );
   }
+}
 
-  Widget sliverGrid() {
-    return Obx(() {
-      return SliverList(
-        delegate: SliverChildBuilderDelegate(
-              (context, index) {
-            return productItem(index);
-          },
-          childCount: controller.newsLength ,
-        ),
-      );
-    });
+class ItemView extends StatefulWidget {
+  int id = -1;
+
+  bool favor = false;
+
+  ItemView({required this.id, required this.favor});
+
+  @override
+  _State createState() => _State();
+}
+
+class _State extends State<ItemView> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: _news.length,
+        itemBuilder: (context, index) {
+          return newsItem(index);
+        });
   }
 
-  TextStyle selectedStyle =
-  TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16);
-  TextStyle unSelectedStyle = TextStyle(color: Colors.white54, fontSize: 16);
+  var _news = [];
 
-  Widget buildCategory() {
-    return Container(
-        color: Template.primaryColor,
-        height: 48,
-        width: double.infinity,
-        child: Obx(() {
-          return ListView.builder(
-              controller: _scrollController,
-              scrollDirection: Axis.horizontal,
-              itemCount: controller.categoryLength,
-              itemBuilder: (context, index) {
-                return Container(
-                  padding: EdgeInsets.only(
-                    left: 16,
-                    right: 12,
-                  ),
-                  child: GestureDetector(
-                    onTap: () {},
-                    behavior: HitTestBehavior.translucent,
-                    child: GestureDetector(
-                      onTap: () {
-                        print("Selected Category index");
-
-                        controller.selectCategory(index);
-                      },
-                      child: Container(
-                        child: Center(
-                            child: Text(
-                              controller.categoryIndex(index).name,
-                              style: (index == controller.categorySelected)
-                                  ? selectedStyle
-                                  : unSelectedStyle,
-                            )),
-                      ),
-                    ),
-                  ),
-                );
-              });
-        }));
+  @override
+  void initState() {
+    print("page : ${widget.id}");
+    getNewst();
+    super.initState();
   }
 
-  Widget productItem(int index) {
+  void getNewst() {
+    if (widget.favor) {
+    } else {
+      NewsProvider _provider = NewsProvider();
+      _news.clear();
+      _provider.index(widget.id, (value) {
+        _news.addAll(value);
+        setState(() {});
+      }, (error) {});
+    }
+  }
+
+  Widget newsItem(int index) {
     return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onLongPressEnd: (va) {
-        controller.goCreate(index);
-      },
       onTap: () {
-        controller.goDetail(index);
+        var detailController = Get.put(NewsDetailController());
+        detailController.list.clear();
+        detailController.list.addAll(_news[index].nodes);
+        Get.to(NewsDetailView());
       },
+      behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: EdgeInsets.only(left: 8,right: 8,top: 4),
+        padding: EdgeInsets.only(left: 8, right: 8, top: 4),
         child: Card(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: EdgeInsets.only(left: 12, right: 12, top: 12,bottom: 12),
+                padding:
+                    EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16),
                 width: double.infinity,
-                child: ClipRRect(borderRadius: BorderRadius.circular(4) ,child: AspectRatio(aspectRatio: 1.48, child: FittedBox(fit: BoxFit.cover,child: CachedNetworkImage(imageUrl: controller.newsIndex(index).imageURL())))),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: AspectRatio(
+                        aspectRatio: 1.48,
+                        child: FittedBox(
+                            fit: BoxFit.cover,
+                            child: CachedNetworkImage(
+                                imageUrl: _news[index].imageURL())))),
               ),
-              Container(child: Text(controller.newsIndex(index).title,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),padding: EdgeInsets.only(left: 12,top: 4,bottom: 12))
+              Container(
+                  margin: EdgeInsets.only(right: 16),
+                  child: Text(
+                    _news[index].title,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  padding: EdgeInsets.only(left: 16, top: 4, bottom: 16)),
+              Container(
+                margin: EdgeInsets.only(left: 16, right: 16),
+                width: double.infinity,
+                height: 1,
+                color: Template.subColor.withOpacity(0.1),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 16, top: 12, bottom: 16),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+                        child: Container(
+                          width: 28,
+                          height: 28,
+                          child: CachedNetworkImage(
+                            imageUrl: _news[index].userImage,
+                          ),
+                        )),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 8),
+                        child: Text(
+                          _news[index].userName,
+                          style:
+                              TextStyle(color: Template.subColor, fontSize: 16),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(right: 16),
+                      child: Text(
+                        "12-12-2021",
+                        style:
+                            TextStyle(color: Template.subColor, fontSize: 16),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
-
-  Widget image(int index) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(4),
-      child: AspectRatio(
-        aspectRatio: 1.6,
-        child: FittedBox(
-          fit: BoxFit.contain,
-          child: CachedNetworkImage(
-              imageUrl: controller.newsIndex(index).imageURL()),
-        ),
-      ),
-    );
-  }
 }
-

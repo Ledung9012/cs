@@ -50,8 +50,36 @@ class NewsProvider {
     });
   }
 
+  void user(int id,  Function(List<News>) onSuccess, Function(String) onError ) {
+    Map body = Map();
+    body['id'] = id;
 
-  void create(int id, String title, dynamic content,String image, Function(News) onSuccess, Function(String) onError) {
+    apiRequest.msRequest(APIFunction.NEWS_USER, body).then((response) {
+
+
+      print("====================== $response");
+
+      if (response.hasError()) {
+        onError(response.errorDisplay());
+        print("======================ERRR");
+
+
+      } else {
+        var newsList = News.list(response.data);
+        onSuccess(News.list(response.data));
+
+
+        print("====================== $newsList");
+
+      }
+    }).onError((error, stackTrace) {
+
+      print("====================== $error");
+
+      onError(error.toString());
+    });
+  }
+  void create({required int id,required String title,required dynamic content,required String image,required Function() onSuccess,required Function(String) onError}) {
     Map body = Map();
     body['title'] = title;
     body['content'] = content;
@@ -60,9 +88,11 @@ class NewsProvider {
 
     apiRequest.msRequest(APIFunction.NEWS_CREATE, body).then((response) {
       if (response.hasError()) {
+
+
         onError(response.errorDisplay());
       } else {
-        onSuccess(News.list(response.data)[0]);
+        onSuccess();
       }
     }).onError((error, stackTrace) {
       onError(error.toString());

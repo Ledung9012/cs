@@ -5,7 +5,7 @@ import 'package:mobile/extension/string_extension.dart';
 enum OrderCommistionStatus {
   SUCCESS,
   REJECT,
-  PENDING,
+  PROCESS,
 }
 
 class OrderCreateRequest{
@@ -35,7 +35,7 @@ class Order {
   double pubCommission = 0.0;
   int storeId = -1;
   String merchant = "";
-  OrderCommistionStatus status = OrderCommistionStatus.PENDING;
+  OrderCommistionStatus status = OrderCommistionStatus.PROCESS;
   String salesTime = "";
   String createdAt = "";
 
@@ -79,7 +79,7 @@ class Order {
     switch (status) {
       case OrderCommistionStatus.SUCCESS:
         return "Thành công";
-      case OrderCommistionStatus.PENDING:
+      case OrderCommistionStatus.PROCESS:
         return "Đang xử lý";
       case OrderCommistionStatus.REJECT:
         return "Từ chối";
@@ -90,7 +90,7 @@ class Order {
     switch (status) {
       case OrderCommistionStatus.SUCCESS:
         return Colors.green;
-      case OrderCommistionStatus.PENDING:
+      case OrderCommistionStatus.PROCESS:
         return Colors.orangeAccent;
       case OrderCommistionStatus.REJECT:
         return Colors.red;

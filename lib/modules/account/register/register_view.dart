@@ -2,9 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile/instance/templace_instance.dart';
+import 'package:mobile/main.dart';
+import 'package:mobile/modules/account/account_controller.dart';
 import 'package:mobile/modules/account/register/register_controller.dart';
 
 class RegisterView extends GetView<RegisterController> {
+
+
+
+  Function complete;
+
+  RegisterView({required this.complete});
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -38,6 +47,9 @@ class RegisterView extends GetView<RegisterController> {
                   margin: EdgeInsets.only(top: 8),
                   child: TextField(
                       autocorrect: false,
+                      enableSuggestions: false,
+                      keyboardType: TextInputType.emailAddress,
+
                       onSubmitted: (value) {},
                       controller: controller.nameEditController,
                       decoration:
@@ -46,6 +58,7 @@ class RegisterView extends GetView<RegisterController> {
                 Container(
                   child: TextField(
                       autocorrect: false,
+                      enableSuggestions: false,
                       obscureText: true,
                       controller: controller.passwordEditController,
                       onSubmitted: (value) {},
@@ -65,6 +78,8 @@ class RegisterView extends GetView<RegisterController> {
                 Container(
                   child: TextField(
                       autocorrect: false,
+                      enableSuggestions: false,
+
                       controller: controller.collaboratorEditController,
                       obscureText: true,
                       onSubmitted: (value) {},
@@ -92,8 +107,15 @@ class RegisterView extends GetView<RegisterController> {
             child: ElevatedButton(
               child: Text("Đăng Ký"),
               onPressed: () {
-                controller.register((success) {}, (successResponse) {
-                  Template.snackError(successResponse);
+                controller.register((success) {
+
+                  AccountController accountController = Get.put(AccountController());
+                  accountController.relayout();
+                  Get.offNamed("/home");
+
+                }, (successResponse) {
+                  Template.dialogError(successResponse);
+
                 });
               },
               style: Template.primaryButtonStyle,

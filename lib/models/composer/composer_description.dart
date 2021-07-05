@@ -3,33 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:mobile/instance/templace_instance.dart';
 import 'package:mobile/models/composer/composer_node.dart';
 
-
-
-
-
 extension ComposerDescription on ComposerNode {
-
-
-
-
   Widget descriptionView() {
     return Container(
       margin: EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 0),
       child: RichText(
         softWrap: true,
-        textAlign: TextAlign.left,
+        textAlign: TextAlign.justify,
         text: TextSpan(
           text: value,
           style: TextStyle(
-            color: Colors.black.withOpacity(0.7),
-            fontSize: 17,
-          ),
+              color: Colors.black.withOpacity(0.7), fontSize: 18, height: 1.24),
         ),
       ),
     );
   }
-
-
 
   Widget desciptionEditting() {
     return Container(
@@ -51,8 +39,8 @@ extension ComposerDescription on ComposerNode {
               margin: EdgeInsets.only(right: 12),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
-                  border: Border.all(
-                      color: Template.subColor.withOpacity(0.1))),
+                  border:
+                      Border.all(color: Template.subColor.withOpacity(0.1))),
               width: double.infinity,
               child: Focus(
                 onFocusChange: (val) {
@@ -66,10 +54,8 @@ extension ComposerDescription on ComposerNode {
                   enableSuggestions: false,
                   autocorrect: false,
                   controller: headerEditController,
-                  onTap: () {
-                  },
-                  onSubmitted: (value) {
-                  },
+                  onTap: () {},
+                  onSubmitted: (value) {},
                   onEditingComplete: () {},
                   style: TextStyle(
                     color: Colors.black,
@@ -86,9 +72,4 @@ extension ComposerDescription on ComposerNode {
       ),
     );
   }
-
-
-
-
-
 }

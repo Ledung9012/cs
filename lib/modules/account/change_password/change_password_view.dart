@@ -114,7 +114,7 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
                   controller.sumbit(onSuccess: () {
                     Template.snackSuccess("Thay đổi mật khẩu thành công");
                   }, onFailure: (error) {
-                    Template.snackError(error);
+                    Template.dialogError(error);
                   });
                 },
               )),

@@ -1,13 +1,22 @@
 import 'package:get/get.dart';
+import 'package:mobile/instance/app_instance.dart';
 import 'package:mobile/services/api_response.dart';
 
 enum APIFunction {
-
-
   APP_CONFIG,
 
+  //--------------------ADDRESS
+  ADDRESS_PROVINCE,
+  ADDRESS_DISTRICT,
+  ADDRESS_WARD,
+  ADDRESS_STREET,
+  ADDRESS_USER,
+  ADDRESS_UPDATE,
+  ADDRESS_CREATE,
+  ADDRESS_DELETE,
 
-
+  //--------------------NOTIFICATION
+  NOTIFICATION_USER,
 
   //--------------------USER
   USER_REGISTER,
@@ -15,6 +24,10 @@ enum APIFunction {
   USER_ALREADY_EXISTS,
   USER_INFO,
   USER_UPDATE_PASSWORD,
+  USER_RESET_PASSWORD,
+  USER_UPDATE_IMAGE,
+  USER_SUPPORT,
+  USER_FAQ,
 
   //--------------------TRANSACTION
   TRANSACTION_SUMMARY,
@@ -23,13 +36,14 @@ enum APIFunction {
   TRANSACTION_WITHDRAW,
 
   //--------------------NEWS
-  STORE_CATEGPRY,
+  STORE_CATEGORY,
   STORE_DETAIL,
   STORE_PRODUCTS,
   STORE_CATEGORY_MASTER,
   STORE_INDEX,
   STORE_ORDER_HISTORY,
   STORE_ORDER_CREATE,
+
   //--------------------NEWS
   NEWS_CATEGORY,
   NEWS_INDEX,
@@ -46,20 +60,28 @@ enum APIFunction {
 var apiRequest = ApiRequest();
 
 class ApiRequest extends GetConnect {
-  String url = "http://apicashback.lolshop.vn";
-
   static String path(APIFunction value) {
     switch (value) {
       case APIFunction.USER_UPDATE_PASSWORD:
         return "/user/update/password";
+      case APIFunction.USER_UPDATE_IMAGE:
+        return "/user/update/image";
       case APIFunction.USER_REGISTER:
         return "/user/register";
       case APIFunction.USER_LOGIN:
         return "/user/login";
       case APIFunction.USER_ALREADY_EXISTS:
         return "/user/exists";
+      case APIFunction.USER_RESET_PASSWORD:
+        return "/user/reset/password";
       case APIFunction.USER_INFO:
         return "/user/info";
+      case APIFunction.USER_SUPPORT:
+        return "/user/support";
+      case APIFunction.USER_FAQ:
+        return "/user/faq";
+
+    //---------------------------------------------APP
       case APIFunction.APP_CONFIG:
         return "/app/config";
 
@@ -74,7 +96,7 @@ class ApiRequest extends GetConnect {
         return "/transaction/withdraw";
 
       //-------------------------------------------STORE
-      case APIFunction.STORE_CATEGPRY:
+      case APIFunction.STORE_CATEGORY:
         return "/store/category";
       case APIFunction.STORE_DETAIL:
         return "/store/detail";
@@ -105,14 +127,35 @@ class ApiRequest extends GetConnect {
       case APIFunction.NEWS_USER:
         return "/news/user";
 
-      //-------------------------------------------FILE UPLOAD
+    //-------------------------------------------NOTIFICATION
+      case APIFunction.NOTIFICATION_USER:
+        return "/notification/user";
+
+    //-------------------------------------------NOTIFICATION
+      case APIFunction.ADDRESS_PROVINCE:
+        return "/address/province";
+      case APIFunction.ADDRESS_DISTRICT:
+        return "/address/district";
+      case APIFunction.ADDRESS_WARD:
+        return "/address/ward";
+      case APIFunction.ADDRESS_STREET:
+        return "/address/street";
+      case APIFunction.ADDRESS_USER:
+        return "/address/user";
+      case APIFunction.ADDRESS_UPDATE:
+        return "/address/update";
+      case APIFunction.ADDRESS_CREATE:
+        return "/address/create";
+      case APIFunction.ADDRESS_DELETE:
+        return "/address/delete";
+
+    //-------------------------------------------FILE UPLOAD
       case APIFunction.FILE_UPLOAD:
         return "/upload";
 
-    //-------------------------------------------Metadata
+      //-------------------------------------------Metadata
       case APIFunction.APP_CONFIG:
         return "/app/config";
-
     }
   }
 
@@ -125,15 +168,16 @@ class ApiRequest extends GetConnect {
   ApiRequest._internal();
 
   Future<ApiResponse> msRequest(APIFunction function, Map parameter) async {
-    final response = await post(url + ApiRequest.path(function), parameter);
+    print("end point : ${app.endpoint()}");
+    final response =
+        await post(app.endpoint() + ApiRequest.path(function), parameter);
     if (response.status.hasError) {
       print("master request error : ${response.statusText}");
       return Future.error(response.statusText!);
     } else {
-      print("API---------------------------------------------------- $function");
+      print("API--------------------$function");
       print("Request-- $parameter");
       print("Response--  ${response.body}");
-
       ApiResponse apiResponse = ApiResponse.fromJson(response.body);
       return apiResponse;
     }

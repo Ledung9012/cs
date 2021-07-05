@@ -1,53 +1,28 @@
 import 'package:get/get.dart';
 import 'package:mobile/models/category.dart';
-import 'package:mobile/models/news.dart';
-import 'package:mobile/modules/news/detail/news_detail_controller.dart';
-import 'package:mobile/modules/news/detail/news_detail_view.dart';
+import 'package:mobile/modules/account/login/login_controller.dart';
+import 'package:mobile/modules/account/login/login_view.dart';
+import 'package:mobile/modules/news/create/news_create_controller.dart';
+import 'package:mobile/modules/news/create/news_create_view.dart';
 import 'package:mobile/modules/news/news_provider.dart';
 
 class NewsController extends GetxController {
-  NewsProvider _provider = NewsProvider();
-  RxList<News> _news = List<News>.empty().obs;
-  RxList<Category> _categories = List<Category>.empty().obs;
-  var newsCount = 0.obs;
+  RxList<Category> categories = List<Category>.empty().obs;
+  var favor = false.obs;
+  int get categoryLength => categories.value.length;
+  Category categoryIndex(int index) => categories[index];
 
-  var _categorySelected = 0.obs;
-
-  int get categoryLength => _categories.value.length;
-
-  int get newsLength => _news.length;
-
-  int get categorySelected => _categorySelected.value;
-
-  Category categoryIndex(int index) => _categories[index];
-
-  News newsIndex(int index) => _news[index];
-
-  void selectCategory(int index) {
-    int reIndex = index;
-    if (reIndex == categoryLength) {
-      reIndex = 0;
+  int initalTabbarIndex(){
+    print("inital ---");
+    if(favor.value){
+      return categories.length -1 ;
     }
-
-    if (reIndex < 0) {
-      reIndex = categoryLength - 1;
-    }
-    _categorySelected.value = reIndex;
-    _categories.refresh();
-    getNewst();
+    return 0 ;
   }
+  void favorToggle() {
+    favor.value = !favor.value;
+    categories.clear();
 
-  void next() {
-    selectCategory(_categorySelected.value + 1);
-  }
-
-  void refresh() {
-    newsCount.value = _news.length;
-    _news.refresh();
-  }
-
-  void previous() {
-    selectCategory(_categorySelected.value - 1);
   }
 
   @override
@@ -68,42 +43,23 @@ class NewsController extends GetxController {
   void onChange(String value) {}
 
   void getCategory() {
-    print("Category new--------");
-    _provider.category(
+    NewsProvider().category(
         onSuccess: (value) {
-          _categories.clear();
-          _categories.add(Category(-1, "Tất Cả"));
-          _categories.addAll(value);
-          getNewst();
+          categories.clear();
+          categories.add(Category(-1, "Tất Cả"));
+          categories.addAll(value);
+          categories.add(Category(-2, "Danh sách yêu thích"));
         },
         onError: (value) {});
   }
 
-  void getNewst() {
-    _news.clear();
-
-    // _provider.index(_categories[categorySelected].id,onSuccess: (value) {
-    //   _news.addAll(value);
-    //   _news.refresh();
-    // });
-
-    _provider.index(_categories[categorySelected].id, (value) {
-      _news.addAll(value);
-      _news.refresh();
-      print("Page ---- : ${_news.length}");
-    }, (error) {});
+  void create() {
+    Get.lazyPut<NewsCreateController>(() => NewsCreateController());
+    Get.to(() => NewsCreateView());
   }
 
-  void goCreate(int index) {
-    // var detailController = Get.put(NewsCreateController());
-    // detailController.clear();
-    // Get.to(NewsCreateView());
-  }
-
-  void goDetail(int index) {
-    var detailController = Get.put(NewsDetailController());
-    detailController.list.clear();
-    detailController.list.addAll(_news[index].nodes);
-    Get.to(NewsDetailView());
+  void logon() {
+    Get.put(LoginController(authenSuccess: () {}, authenFalse: (val) {}));
+    Get.to(LoginView());
   }
 }

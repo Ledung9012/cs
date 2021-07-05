@@ -10,7 +10,7 @@ class StoreProvider extends GetConnect {
       {required Function(List<Category>) onSuccess,
       required Function(String) onError}) {
     Map body = Map();
-    apiRequest.msRequest(APIFunction.STORE_CATEGPRY, body).then((response) {
+    apiRequest.msRequest(APIFunction.STORE_CATEGORY, body).then((response) {
       if (response.hasError()) {
         onError(response.errorDisplay());
       } else {
@@ -96,6 +96,11 @@ class StoreProvider extends GetConnect {
       {required OrderCreateRequest request,
       required Function() success,
       required Function(String) onError}) {
+
+
+
+    print("Order create ");
+
     Map body = Map();
     body['userId'] = request.userId;
     body['name'] = request.name;

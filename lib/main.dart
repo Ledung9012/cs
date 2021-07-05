@@ -6,8 +6,9 @@ import 'package:mobile/instance/templace_instance.dart';
 import 'package:mobile/modules/home/home_controller.dart';
 import 'package:mobile/modules/home/home_view.dart';
 import 'package:mobile/modules/news/news_controller.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-class AppPages {
+class AppPages with WidgetsBindingObserver{
   String shopping = "/shopping";
   String home = "/home";
   String intro = "/intro";
@@ -25,11 +26,16 @@ class AppPages {
 
 void configApp() {}
 
+
+
+
 void main() async {
 
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
+  app.initialize();
   app.loadConfig();
-  Get.put(NewsController());
   Get.put(HomeController());
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,5 +51,4 @@ void main() async {
             }),
       ],
       initialRoute: AppPages().home));
-
 }

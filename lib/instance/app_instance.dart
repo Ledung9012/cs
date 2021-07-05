@@ -1,79 +1,163 @@
+import 'dart:io' show Platform;
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
+import 'package:launch_review/launch_review.dart';
+import 'package:mobile/extension/map_extension.dart';
+import 'package:mobile/instance/templace_instance.dart';
 import 'package:mobile/modules/home/home_controller.dart';
 import 'package:mobile/services/services.dart';
-import 'package:mobile/extension/map_extension.dart';
-import 'package:get/get.dart';
-
+import 'package:package_info/package_info.dart';
 
 var app = AppInstance();
 
-class AppInstance {
+enum Environment {
+  PRODUCTION,
+  DEVELOPMENT,
+  STAGING,
+}
 
+class AppInstance with WidgetsBindingObserver {
   static final AppInstance _singleton = AppInstance._internal();
+
+  AppInstance._internal();
+
   factory AppInstance() {
     return _singleton;
   }
 
-  AppInstance._internal();
+  bool get devMode => !kReleaseMode;
 
+  bool get productionMode => kReleaseMode;
 
+  bool get isAndroid => Platform.isAndroid;
+
+  bool get isIOS => Platform.isIOS;
 
   List items = [];
+  var enableInternalShopping = false;
+  var enableStore = false;
+  var accessTradeURL = ""; // ACCESSTrade deep link
+  var environment = Environment.PRODUCTION;
 
+  //allway call when app active
+  var forceUpdate = false;
 
-  var  enableInvestmentWallet = false;
-  var  enableCashbackWallet = false;
-  var  enableGiftMission = false;
-  var  enableShopping = false;
-  var  enableCashbackProduct = false;
-  var  accessTradeURL = false;
-  var  enableCashbackStore = false;
+  var version = ""; // version hiện hành trên store
 
+  // Tính năng quảy lý tin tức
+  var enableNewsManagement = false;
 
+  // Local Value
+  var appName = "packageInfo.appName";
+  var packageName = "";
+  var appVersion = "";
+  var buildNumber = "";
 
+  void getAppMetadata() {}
 
-  void loadConfig(){
+  void initialize() {
+    LaunchReview.launch();
+
+    if (productionMode) {
+      environment = Environment.PRODUCTION;
+    }
+  }
+
+  set env(Environment value) {
+    environment = value;
+  }
+
+  void processVersion() {
+    if (appVersion != version) {
+      if (forceUpdate) {
+        Template.dialogInfoAction("Vui lòng cập nhật phiên bản mới", () {
+          LaunchReview.launch(
+              androidAppId: "com.iyaffle.rangoli", iOSAppId: "1573198040");
+        });
+      }
+    }
+  }
+
+  void appActive() {
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      appName = packageInfo.appName;
+      packageName = packageInfo.packageName;
+      appVersion = packageInfo.version;
+      buildNumber = packageInfo.buildNumber;
+      apiRequest.msRequest(APIFunction.APP_CONFIG, Map()).then((response) {
+        items = response.data;
+        updateActive();
+        processVersion();
+      }).onError((error, stackTrace) {
+        print("Update config error $error");
+      });
+    });
+  }
+
+  void updateActive() {
+    forceUpdate = getMap("forceUpdate").boolValue("value");
+    version = getMap("version").stringValue("value");
+    enableNewsManagement = getMap("enableNewsManagement").boolValue("value");
+  }
+
+  void loadConfig() {
     apiRequest.msRequest(APIFunction.APP_CONFIG, Map()).then((response) {
-      items = response.data ;
-      updateConfig() ;
-
-
+      items = response.data;
+      updateConfig();
     }).onError((error, stackTrace) {
-
-
       print("Update config error $error");
     });
   }
 
-  void updateConfig(){
-
-    enableInvestmentWallet = getMap("enableInvestmentWallet").boolValue("value");
-    enableCashbackWallet = getMap("enableCashbackWallet").boolValue("value");
-    enableGiftMission = getMap("enableGiftMission").boolValue("value");
-
-    // Dùng cho tab mua hàng và trang Lịch sử mua hàng
-    enableShopping = getMap("enableShopping").boolValue("value");
-
-    enableCashbackProduct = getMap("enableCashbackProduct").boolValue("value");
-
-    accessTradeURL = getMap("accessTradeURL").boolValue("value");
-
-    // Dùng cho tab thương hiệu và ví hoàn tiền mua sắm
-    enableCashbackStore = getMap("enableCashbackStore").boolValue("value");
-
-
-
+  void updateConfig() {
+    enableInternalShopping =
+        getMap("enableInternalShopping").boolValue("value");
+    enableStore = getMap("enableStore").boolValue("value");
+    accessTradeURL = getMap("accessTradeURL").stringValue("value");
     var homeController = Get.put(HomeController());
-    homeController.loadConfigComplete = true ;
-
+    homeController.loadConfigComplete = true;
   }
 
-  Map getMap(String key)
-  {
-    if(items.firstWhere((currency) => currency["key"] == key) != null){
+  Map getMap(String key) {
+    if (items.firstWhere((currency) => currency["key"] == key) != null) {
       return items.firstWhere((currency) => currency["key"] == key);
     }
     return Map();
+  }
+
+  String endpoint() {
+    switch (environment) {
+      case Environment.DEVELOPMENT:
+        return "http://apicashback.lolshop.vn";
+      case Environment.STAGING:
+        return "http://staging.api.save365.vn";
+      case Environment.PRODUCTION:
+        return "http://api.save365.vn";
+    }
+  }
+
+  String cmsImgeURL() {
+    switch (environment) {
+      case Environment.DEVELOPMENT:
+        return "http://cashback.lolshop.vn/storage/";
+      case Environment.STAGING:
+        return "http://staging.cms.save365.vn/storage/";
+      case Environment.PRODUCTION:
+        return "http://cms.save365.vn/storage/";
+    }
+  }
+
+  String imageAppURL() {
+    switch (environment) {
+      case Environment.DEVELOPMENT:
+        return "http://cashback.lolshop.vn/storage/";
+      case Environment.STAGING:
+        return "http://staging.cms.save365.vn/storage/";
+      case Environment.PRODUCTION:
+        return "http://cms.save365.vn/storage/";
+    }
   }
 }

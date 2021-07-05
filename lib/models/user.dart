@@ -10,6 +10,7 @@ class CSUser {
   var name = "";
   var email = "";
   var phone = "";
+  var avatar = "";
 
 
   CSUser({required this.id});
@@ -20,6 +21,13 @@ class CSUser {
     name = json['name'];
     email = json['email'];
     phone = json['phone'];
+    avatar = json['avatar'];
   }
+
+
+  static List<CSUser> list(List json) {
+    return json.map((entry) => CSUser.fromJson(entry)).toList();
+  }
+
 
 }

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mobile/extension/string_extension.dart';
+import 'package:mobile/instance/user_instance.dart';
 import 'package:mobile/models/transaction.dart';
 import 'package:mobile/modules/transaction/transaction_provider.dart';
 
@@ -18,7 +19,7 @@ class TransactionController extends GetxController {
 
   void history() {
     _provider.history(
-        userId: 2,
+        userId: userInstance.userId,
         onSuccess: (value) {
           transactions.addAll(value);
           transactions.refresh();
@@ -34,7 +35,7 @@ class TransactionController extends GetxController {
 
   void summary() {
     _provider.summary(
-        userId: 2,
+        userId: userInstance.userId,
         onSuccess: (value) {
           transactionSummary.value = value;
         },

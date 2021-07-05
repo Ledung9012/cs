@@ -1,80 +1,41 @@
 import 'package:get/get.dart';
-import 'package:mobile/models/category.dart';
-import 'package:mobile/models/store.dart';
-import 'package:mobile/modules/stores/store_detail/store_detail_controller.dart';
-import 'package:mobile/modules/stores/store_detail/store_detail_view.dart';
-import 'package:mobile/modules/stores/store_provider.dart';
+import 'package:mobile/instance/user_instance.dart';
+import 'package:mobile/models/notification.dart';
+import 'package:mobile/modules/account/notification/notification_provider.dart';
+import 'package:mobile/modules/news/create/news_create_controller.dart';
+import 'package:mobile/modules/news/create/news_create_view.dart';
 
 class NotificationController extends GetxController {
-  final _provider = StoreProvider();
-  RxList<Store> stores = List<Store>.empty().obs;
+  RxList<SNotification> _notification = List<SNotification>.empty().obs;
 
-  int get categoryCount => categories.length;
-  RxList<Category> categories = List<Category>.empty().obs;
+  int get newsLength => _notification.length;
 
-  int get siteCount => stores.length;
-
-  var _selectedIndex = 0;
-
-  int get selectedIndex => _selectedIndex;
-
-  void selectIndex(int value) {
-    _selectedIndex = value;
-    categories.refresh();
-    index(categories[value].id);
-  }
-
-  @override
-  // TODO: implement onStart
-  get onStart => super.onStart;
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
+  NotificationProvider _provider = NotificationProvider();
 
   @override
   void onInit() {
-    super.onInit();
-    categoryMaster();
-    index(selectedIndex);
+    loadNews();
   }
 
-  void categoryMaster() {
-    _provider.categoryMaster(
-        success: (value) {
-          categories.clear();
-          categories.addAll(value);
-          selectIndex(0);
+  void loadNews() {
+    _notification.clear();
+
+    _provider.user(id: userInstance.userId,
+        success: (data) {
+          _notification.addAll(data);
+          
+          print("count : ${_notification.length}");
+          _notification.refresh();
         },
-        onError: (value) {});
+        onError: (error) {});
   }
 
-  void index(int id) {
-    stores.clear();
-    _provider.index(id, onSuccess: (value) {
-      stores.addAll(value);
-      stores.refresh();
-    }, onError: (error) {});
+  void create() {
+    Get.lazyPut<NewsCreateController>(() => NewsCreateController());
+    Get.to(() => NewsCreateView());
   }
 
-  Category item(int value) {
-    return this.categories[value];
-  }
-
-  Store store(int value) {
-    return this.stores[value];
-  }
-
-  void detail(int index) {
-    var item = this.stores[index];
-    var detail = Get.put(StoreDetailController(item));
-    detail.item = item;
-    Get.to(StoreDetailView());
+  SNotification item(int index) {
+    return _notification[index];
   }
 }

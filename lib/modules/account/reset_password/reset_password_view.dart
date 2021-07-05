@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +5,10 @@ import 'package:mobile/instance/templace_instance.dart';
 import 'package:mobile/modules/account/reset_password/reset_password_controller.dart';
 
 class ResetPasswordView extends GetView<ResetPasswordController> {
+  String phone;
+
+  ResetPasswordView({required this.phone});
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -31,7 +33,7 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                             fontWeight: FontWeight.w600),
                         children: [
                           TextSpan(
-                              text: controller.phoneNumber,
+                              text: phone,
                               style: TextStyle(
                                   height: 1.8,
                                   color: Template.primaryColor,
@@ -54,10 +56,19 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
       child: Column(
         children: [
           TextField(
-            autocorrect: false,
             decoration: InputDecoration(hintText: "Mã xác nhận"),
-            onSubmitted: (value){
 
+
+            autocorrect: false,
+            enableSuggestions: false,
+            keyboardType: TextInputType.emailAddress,
+            controller: controller.authCodeController,
+
+            onSubmitted: (value) {
+              controller.submitAuthenCode(
+                  onSuccess: () {}, onFailure: (valie) {
+                    Template.dialogError(valie);
+              });
             },
           ),
           SizedBox(
@@ -91,11 +102,10 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
   }
 
   Widget buildCreateGroup() {
-    return Obx((){
-      if(controller.isState(ResetPasswordState.none)) {
+    return Obx(() {
+      if (controller.isState(ResetPasswordState.none)) {
         return Container();
-      }
-      else{
+      } else {
         return Container(
           margin: EdgeInsets.only(top: 12),
           child: Column(
@@ -117,17 +127,21 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                 margin: EdgeInsets.only(top: 8),
                 child: TextField(
                     autocorrect: false,
+                    obscureText: true,
+                    enableSuggestions: false,
                     onSubmitted: (value) {},
-                    // controller: controller.nameEditController,
+                    controller: controller.passwordEditController,
                     decoration: InputDecoration(hintText: "Nhập mật khẩu mới")),
               ),
               Container(
                 child: TextField(
                     autocorrect: false,
-                    // controller: controller.passwordEditController,
-
+                    enableSuggestions: false,
+                    obscureText: true,
+                    controller: controller.passwordConfirmEditController,
                     onSubmitted: (value) {},
-                    decoration: InputDecoration(hintText: "Xác nhận mật khẩu mới")),
+                    decoration:
+                        InputDecoration(hintText: "Xác nhận mật khẩu mới")),
               ),
               Container(
                 margin: EdgeInsets.only(top: 40),
@@ -136,16 +150,13 @@ class ResetPasswordView extends GetView<ResetPasswordController> {
                 child: ElevatedButton(
                   child: Text("Hoàn Tất"),
                   onPressed: () {
-                    // controller.register((success)  {
-                    //
-                    //
-                    //
-                    // }, (successResponse) {
-                    //
-                    //   Template.snackError(successResponse);
-                    //
-                    //
-                    // });
+                    controller.submit(onSuccess: () {
+                      Template.dialogInfoAction("Đổi mật khẩu mới thành công", () {
+                        Get.back();
+                      });
+                    }, onFailure: (error) {
+                      Template.dialogError(error);
+                    });
                   },
                   style: Template.primaryButtonStyle,
                 ),

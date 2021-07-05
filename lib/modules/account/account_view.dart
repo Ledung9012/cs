@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,15 +6,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile/instance/templace_instance.dart';
 import 'package:mobile/modules/account/account_controller.dart';
-import 'package:mobile/modules/stores/order/history/order_view.dart';
-import 'package:mobile/modules/transaction/transaction_view.dart';
-
-
 
 class AccountView extends GetView<AccountController> {
   @override
-
-
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
@@ -27,9 +22,7 @@ class AccountView extends GetView<AccountController> {
     return Obx(() {
       if (controller.alreadyLogin.value) {
         return Column(
-          children: [
-            buildHeader(),
-            buildNavigator()          ],
+          children: [buildHeader(), buildNavigator()],
         );
       } else {
         return Container(
@@ -37,8 +30,9 @@ class AccountView extends GetView<AccountController> {
             child: Container(
               height: 48,
               width: 240,
-              child: TextButton(style: Template.primaryButtonStyle,
-                onPressed: (){
+              child: TextButton(
+                style: Template.primaryButtonStyle,
+                onPressed: () {
                   controller.logon();
                 },
                 child: Text("Đăng ký / Đăng nhập"),
@@ -53,10 +47,9 @@ class AccountView extends GetView<AccountController> {
   Future getImage() async {
     print('No image selected.');
     final picker = ImagePicker();
-
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
     if (pickedFile != null) {
+      controller.uploadImage(pickedFile);
     } else {
       print('No image selected.');
     }
@@ -83,19 +76,15 @@ class AccountView extends GetView<AccountController> {
                 child: Container(
                   color: Colors.red,
                   child: GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () {
-                        {
-                          // var cost = getImage();
-                        }
-                      },
-                      child: FittedBox(
-                          child: Image(
-                            width: 60,
-                            height: 60,
-                            image: AssetImage('assets/images/user.png'),
-                            fit: BoxFit.cover,
-                          ))),
+                    behavior: HitTestBehavior.translucent,
+                    onTap:getImage,
+                    child: FittedBox(
+                      fit: BoxFit.cover,
+                      child: Obx((){
+                        return CachedNetworkImage(imageUrl: controller.image.value);
+                      }),
+                    ),
+                   ),
                 )),
           ),
           Container(
@@ -153,7 +142,8 @@ class AccountView extends GetView<AccountController> {
                               controller.items[index].image,
                               width: 48,
                               height: 48,
-                              color: HexColor.fromHex(controller.items[index].color),
+                              color: HexColor.fromHex(
+                                  controller.items[index].color),
                             ),
                           ),
                           Container(
@@ -161,8 +151,7 @@ class AccountView extends GetView<AccountController> {
                               child: Text(
                                 controller.items[index].name,
                                 style: TextStyle(
-                                    fontSize: 18,
-                                    color: Template.subColor),
+                                    fontSize: 18, color: Template.subColor),
                               ))
                         ],
                       ),

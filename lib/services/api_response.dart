@@ -10,7 +10,7 @@ class ApiResponse {
   }
 
   String errorDisplay() {
-    return "";
+    return message;
   }
 
   bool hasError() {

@@ -2,14 +2,18 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:mobile/instance/templace_instance.dart';
+import 'package:mobile/modules/account/login/login_controller.dart';
 
-class LoginScreen extends GetView<LoginC> {
+class LoginView extends GetView<LoginController> {
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Đăng Nhập"),
-        backgroundColor: PrimaryColor,
+        backgroundColor: Template.primaryColor,
       ),
       body: SafeArea(
         minimum: EdgeInsets.only(left: 24, right: 24, bottom: 12),
@@ -19,7 +23,10 @@ class LoginScreen extends GetView<LoginC> {
               margin: EdgeInsets.only(top: 24),
               child: TextField(
                   autocorrect: false,
+                  enableSuggestions: false,
                   controller: controller.phoneEditController,
+                  keyboardType: TextInputType.emailAddress,
+
                   onSubmitted: (value) {
                     // EasyLoading.show(maskType: EasyLoadingMaskType.black);
 
@@ -27,7 +34,7 @@ class LoginScreen extends GetView<LoginC> {
                       EasyLoading.dismiss();
                     }, onFailure: (error) {
                       EasyLoading.dismiss();
-                      Template.snackError(error);
+                      Template.dialogError(error);
                     });
                   },
                   onChanged: (value) {
@@ -49,10 +56,9 @@ class LoginScreen extends GetView<LoginC> {
         controller.phoneEditController.text, controller.passwordController.text,
         onFailure: (error) {
           EasyLoading.dismiss();
-          Template.snackError(error);
+          Template.dialogError(error);
         }, onSuccess: () {
       Get.back();
-      Template.snackSuccess("Đăng nhập thành công. ");
       EasyLoading.dismiss();
     });
   }
@@ -65,6 +71,8 @@ class LoginScreen extends GetView<LoginC> {
             autocorrect: false,
             controller: controller.authenticationCodeController,
             decoration: InputDecoration(hintText: "Mã xác nhận"),
+            enableSuggestions: false,
+            keyboardType: TextInputType.emailAddress,
           ),
           SizedBox(
             height: 12,
@@ -85,7 +93,7 @@ class LoginScreen extends GetView<LoginC> {
                 Flexible(
                   child: Text(
                     "Bạn chưa có tài khoản. Vui lòng kiểm tra tin nhắn để lấy mã xác nhận tạo mới tài khoản",
-                    style: TextStyle(color: TemplateInstance().subColor),
+                    style: TextStyle(color: Template.subColor),
                   ),
                 )
               ],
@@ -101,10 +109,10 @@ class LoginScreen extends GetView<LoginC> {
                 controller.confirmVirificationCode(
                     controller.authenticationCodeController.text, () {},
                         (error) {
-                      Template.snackError(error);
+                      Template.dialogError(error);
                     });
               },
-              style: TemplateInstance().elevantedPrimaryButtonStyle,
+              style: Template.primaryButtonStyle,
             ),
           )
         ],
@@ -121,6 +129,11 @@ class LoginScreen extends GetView<LoginC> {
       if (controller.isState(LoginState.alreadyRegister)) {
         return buildLoginGroup();
       }
+
+      if (controller.isState(LoginState.authenticating)) {
+        return buildGroupRegister();
+      }
+
 
       if (controller.isState(LoginState.preRegister)) {
         return buildGroupRegister();
@@ -168,7 +181,7 @@ class LoginScreen extends GetView<LoginC> {
                         TextSpan(
                             text: "Nếu bạn quên mật khẩu, vui lòng nhấn vào ",
                             style:
-                            TextStyle(color: TemplateInstance().subColor)),
+                            TextStyle(color: Template.subColor)),
                         TextSpan(
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
@@ -181,7 +194,7 @@ class LoginScreen extends GetView<LoginC> {
                         TextSpan(
                             text: "để lấy mật khẩu mới",
                             style:
-                            TextStyle(color: TemplateInstance().subColor)),
+                            TextStyle(color: Template.subColor)),
                       ],
                     ),
                   ),
@@ -198,7 +211,7 @@ class LoginScreen extends GetView<LoginC> {
               onPressed: () {
                 login();
               },
-              style: TemplateInstance().elevantedPrimaryButtonStyle,
+              style: Template.primaryButtonStyle,
             ),
           )
         ],

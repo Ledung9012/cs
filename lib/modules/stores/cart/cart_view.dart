@@ -1,270 +1,474 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:get/get.dart';
 import 'package:mobile/instance/templace_instance.dart';
+import 'package:mobile/modules/account/address/address_add_controller.dart';
+import 'package:mobile/modules/account/address/address_add_view.dart';
 import 'package:mobile/modules/stores/cart/cart_controller.dart';
-import 'package:mobile/modules/stores/cart/cart_instance.dart';
 
 class CartView extends GetView<CartController> {
-  Function compplete;
-
-  CartView(this.compplete);
-
-  InputDecoration inputDecoration(String value) {
-    return InputDecoration(
-      hintText: value,
-      enabledBorder: UnderlineInputBorder(
-        borderSide:
-        BorderSide(color: Template.subColor.withOpacity(0.2)),
-      ),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.cyan),
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(primaryColor: Template.primaryColor),
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          title:  Row(
+            children: [
+              GestureDetector(
+                  onTap: () => Get.back(),
+                  child: Icon(Icons.arrow_back_ios_rounded)),
+              SizedBox(
+                width: 12,
+              ),
+              Text("Giỏ hàng".capitalize!),
+            ],
+          ),
+        ),
+        body: content(),
       ),
     );
   }
 
-  Widget build(BuildContext context) {
-    return Scaffold(
-      // resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
-      body: Container(
-        decoration: BoxDecoration(color: Colors.white),
+  Widget content() {
+    return SingleChildScrollView(
+      child: Container(
+        width: double.infinity,
+        color: Colors.black.withOpacity(0.06),
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.only(top: 44, left: 12, right: 12),
-              height: 86,
-              width: double.infinity,
-              color: Template.primaryColor,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Giỏ hàng",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-                child: Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.only(left: 16, right: 16),
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverStickyHeader(
-                        header: header("Danh sách sản phẩm"),
-                        sliver: sliverList(),
-                      ),
-                      SliverStickyHeader(
-                        header: header("Thông tin người nhận"),
-                        sliver: address(),
-                      ),
-                      SliverStickyHeader(
-                        header: Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                child: header("Tổng giá trị"),
-                              ),
-                            ),
-                            Container(
-                              child: Text(
-                                cart.sumDisplay(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18,
-                                    color: Colors.redAccent),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )),
-            buildBottom()
+            Obx(() => (controller.isEmptyAddress) ? addressNone() : address()),
+            sizeBox(),
+            product(),
+            sizeBox(),
+            coupon(),
+            sizeBox(),
+            payment(),
+            sizeBox(),
+            summary(),
+            sizeBox(),
+            acceptView()
           ],
         ),
       ),
     );
   }
 
-  Widget buildBottom() {
+  Widget acceptView() {
     return Container(
-      padding: EdgeInsets.all(16),
-      child: Row(
+      width: double.infinity,
+      color: Template.primaryColor,
+      height: 48,
+      child: TextButton(
+        onPressed: () {},
+        child: Text(
+          "Xác Nhận",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget sizeBox() {
+    return SizedBox(
+      height: 8,
+    );
+  }
+
+  Widget coupon() {
+    return Container(
+      padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
+      color: Colors.white,
+      child: Column(
         children: [
           Container(
-              width: 40,
-              height: 40,
-              child: TextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: Icon(Icons.arrow_back_rounded),
-                style: Template.subButtonStyle,
-              )),
-          Expanded(child: SizedBox()),
+            child: Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: 8),
+                  child: Icon(
+                    Icons.wallet_giftcard_outlined,
+                    color: Colors.redAccent,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    "Mã khuyến mãi",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ],
+            ),
+          ),
           Container(
-              width: 180,
-              height: 40,
-              child: TextButton(
-                onPressed: () {
+            margin: EdgeInsets.only(left: 30, top: 8),
+            child: Row(
+              children: [
+                Flexible(
+                  child: Container(
+                    height: 40,
+                    child: TextField(
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(4.0),
+                            ),
+                          ),
+                          filled: true,
+                          hintStyle: TextStyle(color: Colors.grey[800]),
+                          fillColor: Colors.white70),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 12,
+                ),
+                Container(
+                  width: 80,
+                  height: 40,
+                  child: TextButton(
+                    onPressed: () {
+                      controller.submitCoupt();
+                    },
+                    child: Text("Áp dụng"),
+                    style: Template.primaryButtonStyle,
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
-                  controller.submit(onSuccess: (){}, onFailure: (error){
+  Widget payment() {
+    return Container(
+      padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
+      color: Colors.white,
+      child: Column(
+        children: [
+          Container(
+            child: Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: 8),
+                  child: Icon(
+                    Icons.payments_rounded,
+                    color: Colors.redAccent,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    "Phương thức thanh toán",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 30, top: 8),
+            child: Row(
+              children: [
+                Flexible(
+                  child: Container(
+                    height: 40,
+                    child: Text("Giao hàng thu tiền tận nơi - COD"),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
-                    Template.snackError(error);
-                  });
-
-                },
-                child: Text("Xác nhận đặt hàng"),
-                style: Template.primaryButtonStyle,
-              ))
+  Widget summary() {
+    return Container(
+      padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
+      color: Colors.white,
+      child: Column(
+        children: [
+          Container(
+            child: Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: 8),
+                  child: Icon(
+                    Icons.check_circle_rounded,
+                    color: Template.primaryColor,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    "Xác nhận đơn hàng",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 30, top: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    child: Text("Giá trị sản phẩm "),
+                  ),
+                ),
+                Container(
+                  child: Text("150.000 vnđ"),
+                )
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 30, top: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    child: Text("Khuyến mãi "),
+                  ),
+                ),
+                Container(
+                  child: Text("- vnđ"),
+                )
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 30, top: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    child: Text("Phí vận chuyển"),
+                  ),
+                ),
+                Container(
+                  child: Text("- vnđ"),
+                )
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 30, top: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    child: Text("Tổng tiền thanh toán"),
+                  ),
+                ),
+                Container(
+                  child: Text("- vnđ"),
+                )
+              ],
+            ),
+          )
         ],
       ),
     );
   }
 
   Widget address() {
-    return SliverList(
-
-      delegate: SliverChildBuilderDelegate(
-            (context, index) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 68,
-                child: TextField(
-                  controller: controller.nameEdit,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: inputDecoration("Họ tên"),
+    return Container(
+      padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
+      color: Colors.white,
+      child: Column(
+        children: [
+          Container(
+            child: Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: 8),
+                  child: Icon(
+                    Icons.location_on_rounded,
+                    color: Colors.redAccent,
+                  ),
                 ),
-              ),
-              Container(
-                height: 68,
-                child: TextField(
-                  controller: controller.phoneEdit,
-
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: inputDecoration("Số điện thoại"),
+                Expanded(
+                  child: Text(
+                    "Lê Dũng  0971568901",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
                 ),
-              ),
-              Container(
-                height: 68,
-                child: TextField(
-                  controller: controller.addressEdit,
-
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: inputDecoration("Địa chỉ"),
-                ),
-              ),
-            ],
-          );
-        },
-        childCount: 1,
+                Icon(Icons.more_vert_outlined)
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 30, top: 8),
+            child: Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    controller.address.display,
+                    style: TextStyle(fontSize: 14, color: Template.subColor),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
 
-  Widget sliverList() {
-    return Obx(() {
-      return SliverList(
-        delegate: SliverChildBuilderDelegate(
-              (context, index) {
-            return productItem(index);
-          },
-          childCount: controller.length.value,
+  Widget addressNone() {
+    return GestureDetector(
+      onTap: () {
+
+        controller.goAdd();
+
+      },
+      child: Container(
+        padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
+        color: Colors.white,
+        child: Column(
+          children: [
+            Container(
+              child: Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(right: 8),
+                    child: Icon(
+                      Icons.location_on_rounded,
+                      color: Colors.redAccent,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Tuỳ chọn địa chỉ giao hàng",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  Icon(Icons.navigate_next_rounded)
+                ],
+              ),
+            ),
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 
-  Widget productItem(int index) {
+  Widget product() {
     return Container(
-      child: Card(
-        child: Container(
-          height: 102,
-          padding: EdgeInsets.only(top: 12, bottom: 12, right: 8),
+      padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
+      color: Colors.white,
+      child: Column(
+        children: [
+          Container(
+            child: Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: 8),
+                  child: Icon(
+                    Icons.shopping_basket_rounded,
+                    color: Colors.redAccent,
+                  ),
+                ),
+                Text(
+                  "Sản phẩm",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                )
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 30, top: 8),
+            child: Obx((){
+
+              return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  primary: true,
+                  itemCount: controller.length.value,
+                  itemBuilder: (context, index) {
+                    return item(index);
+                  });
+
+            }),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget item(index) {
+    return Column(
+      children: [
+        Container(
+          height: 1,
+          color: Colors.black.withOpacity(0.1),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 4, bottom: 4),
+          width: double.infinity,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(),
-                width: 112,
-                height: 86,
-                child: CachedNetworkImage(
-                  imageUrl: controller.product(index).imageURL(),
+                padding: EdgeInsets.only(left: 0, top: 8, bottom: 8, right: 8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(),
+                    child: FittedBox(
+                      fit: BoxFit.cover,
+                      child: CachedNetworkImage(
+                        imageUrl: controller.product(index).imageURL(),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              Expanded(
+              Container(
+                child: Flexible(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        child: Text(
-                          controller.product(index).name,
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ),
-                      Expanded(child: SizedBox()),
+                          margin: EdgeInsets.only(top: 8),
+                          child: Text(controller.product(index).name)),
                       Row(
                         children: [
-                          Expanded(
-                            child: Container(
-                              child: Text(
-                                controller.product(index).priceDisplay(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.redAccent),
-                              ),
-                            ),
+                          Text(
+                            controller.product(index).priceDisplay(),
+                            style: TextStyle(
+                                height: 2, fontWeight: FontWeight.w500),
                           ),
-                          GestureDetector(
-                              onTap: () {
-                                print("remove");
-                                controller.remove(index);
-                              },
-                              child: Container(
-                                width: 40,
-                                child: Icon(
-                                  Icons.clear,
-                                  color: Template.subColor,
-                                ),
-                              ))
+                          Expanded(child: SizedBox()),
+                          Container(
+                              child: TextButton(
+                                  onPressed: () {
+                                    controller.remove(index);
+                                  },
+                                  child: Icon(
+                                    Icons.delete_outline_rounded,
+                                    color: Colors.black.withOpacity(0.24),
+                                  )))
                         ],
-                      ),
+                      )
                     ],
-                  ))
+                  ),
+                ),
+              )
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget header(String value) {
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.only(top: 16, bottom: 16),
-      child: Text(
-        value,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-      ),
+      ],
     );
   }
 }

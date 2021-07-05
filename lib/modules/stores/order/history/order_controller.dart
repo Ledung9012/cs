@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:mobile/instance/user_instance.dart';
 import 'package:mobile/models/order.dart';
 import 'package:mobile/modules/stores/store_provider.dart';
 
@@ -16,7 +17,7 @@ class OrderController extends GetxController {
   void loadOrder() {
     _orders.clear();
     StoreProvider.orderHistory(
-      userId: 2,
+      userId: userInstance.userId,
       success: (values) {
         _orders.addAll(values);
       },

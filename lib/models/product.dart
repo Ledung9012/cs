@@ -1,6 +1,7 @@
 
 import 'package:mobile/extension/map_extension.dart';
 import 'package:mobile/extension/string_extension.dart';
+import 'package:mobile/instance/app_instance.dart';
 
 class Product {
   int id = -1;
@@ -45,7 +46,7 @@ class Product {
 
   String imageURL() {
     if (this.image != null && this.image.length > 0) {
-      return "http://cashback.lolshop.vn/storage/" + this.image;
+      return app.cmsImgeURL() + this.image;
     } else {
       return "";
     }

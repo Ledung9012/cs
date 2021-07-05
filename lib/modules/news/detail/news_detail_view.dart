@@ -6,7 +6,7 @@ import 'package:mobile/modules/news/detail/news_detail_controller.dart';
 class NewsDetailView extends GetView<NewsDetailController> {
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Template.primaryColor,
       child: SafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -66,7 +66,6 @@ class NewsDetailView extends GetView<NewsDetailController> {
 
   Widget composer() {
     return Obx(() {
-      print("Reload composer ${controller.list.length}");
       return Container(
         child: ListView(
           shrinkWrap: true, //just set this property

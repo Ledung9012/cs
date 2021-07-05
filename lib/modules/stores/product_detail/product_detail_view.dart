@@ -11,11 +11,6 @@ class ProductDetailView extends GetView<ProductDetailController> {
 
   ProductDetailView({required this.complete});
 
-
-
-
-
-
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
@@ -143,7 +138,13 @@ class ProductDetailView extends GetView<ProductDetailController> {
                 onPressed: () {
                   print("-------${controller.product}");
                   cart.add(controller.product);
-                  Template.snackSuccess("Đã thêm sản phẩm vào giỏ hàng");
+
+                  Template.dialogInfoList("Đã thêm sản phẩm vào giỏ hàng",
+                      ["Tiếp tục mua hàng", "Thanh Toán"], (p0) {
+                    if (p0 == 1) {
+                      controller.goCart();
+                    }
+                  });
                 },
                 child: Text("Mua hàng"),
                 style: Template.primaryButtonStyle,

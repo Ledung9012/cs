@@ -10,19 +10,18 @@ enum TransactionType {
 }
 
 enum TransactionStatus {
-  PROCESSING,
+  PROCESS,
   SUCCESS,
   REJECT,
   NONE,
 }
 
-
 class WithdrawRequest {
-  var userId = -1 ;
-  var bankId = "" ;
-  var name = "" ;
-  var number = "" ;
-  var value = 0.0 ;
+  var userId = -1;
+  var bankId = "";
+  var name = "";
+  var number = "";
+  var value = 0.0;
 }
 
 class TransactionSummary {
@@ -37,7 +36,6 @@ class TransactionSummary {
     withdraw = json.doubleValue("withdraw");
     available = json.doubleValue("available");
   }
-
 }
 
 class Transaction {
@@ -62,23 +60,21 @@ class Transaction {
     value = json.doubleValue("value");
     createdAt = json.stringValue("created_at");
     targetName = json.stringValue("target_name");
-
   }
 
   String get valueDisplay => value.currencyValue();
 
-  String dateDisplay(){
-    if(DateTime.tryParse(createdAt) != null){
+  String dateDisplay() {
+    if (DateTime.tryParse(createdAt) != null) {
       var date = DateTime.parse(createdAt).stringValue();
       print("date : $date");
       return date;
     }
-    return "" ;
+    return "";
   }
 
-
   Widget statusIcon(double size) {
-    if (status == TransactionStatus.PROCESSING)
+    if (status == TransactionStatus.PROCESS)
       return Icon(
         Icons.pending_rounded,
         size: size,
@@ -115,8 +111,10 @@ class Transaction {
   }
 
   String label() {
-    if (transactionType == TransactionType.CASHBACK) return "Cửa hàng " + targetName;
-    if (transactionType == TransactionType.WITHDRAW) return "Ngân hàng " + targetName;
+    if (transactionType == TransactionType.CASHBACK)
+      return "Cửa hàng " + targetName;
+    if (transactionType == TransactionType.WITHDRAW)
+      return "Ngân hàng " + targetName;
     return "N/A";
   }
 
@@ -137,7 +135,7 @@ class Transaction {
         return Colors.green[50]!;
       case TransactionStatus.REJECT:
         return Colors.redAccent[50]!;
-      case TransactionStatus.PROCESSING:
+      case TransactionStatus.PROCESS:
         return Colors.orange[50]!;
       case TransactionStatus.NONE:
         return Colors.green[50]!;
@@ -150,7 +148,7 @@ class Transaction {
         return Colors.green;
       case TransactionStatus.REJECT:
         return Colors.red;
-      case TransactionStatus.PROCESSING:
+      case TransactionStatus.PROCESS:
         return Colors.orange;
       case TransactionStatus.NONE:
         return Colors.red;
@@ -163,13 +161,12 @@ class Transaction {
         return "Hoàn tất";
       case TransactionStatus.REJECT:
         return "Không thành công";
-      case TransactionStatus.PROCESSING:
+      case TransactionStatus.PROCESS:
         return "Đang xử lý";
       case TransactionStatus.NONE:
         return "";
     }
   }
-
 
   String typeLabel() {
     switch (transactionType) {
@@ -181,5 +178,4 @@ class Transaction {
         return "";
     }
   }
-
 }

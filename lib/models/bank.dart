@@ -1,8 +1,4 @@
 
-
-import 'dart:convert';
-import 'package:mobile/models/composer/composer_node.dart';
-import 'package:mobile/models/file_upload.dart';
 import 'package:mobile/extension/map_extension.dart';
 
 class Bank {

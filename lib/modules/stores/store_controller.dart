@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:mobile/models/category.dart';
 import 'package:mobile/models/store.dart';
+import 'package:mobile/modules/stores/store_detail/store_detail_controller.dart';
+import 'package:mobile/modules/stores/store_detail/store_detail_view.dart';
 import 'package:mobile/modules/stores/store_provider.dart';
 
 class StoreController extends GetxController {
@@ -44,25 +46,21 @@ class StoreController extends GetxController {
   }
 
   void categoryMaster() {
-
-    _provider.categoryMaster(success: (value){
-      categories.clear();
-      categories.addAll(value);
-      selectIndex(0);
-
-    }, onError: (value){
-
-    });
+    _provider.categoryMaster(
+        success: (value) {
+          categories.clear();
+          categories.addAll(value);
+          selectIndex(0);
+        },
+        onError: (value) {});
   }
 
   void index(int id) {
     stores.clear();
-    _provider.index(id, onSuccess: (value){
-        stores.addAll(value);
-        stores.refresh();
-    }, onError: (error){
-
-    });
+    _provider.index(id, onSuccess: (value) {
+      stores.addAll(value);
+      stores.refresh();
+    }, onError: (error) {});
   }
 
   Category item(int value) {
@@ -74,9 +72,9 @@ class StoreController extends GetxController {
   }
 
   void detail(int index) {
-    // var item = this.stores[index];
-    // var detail = Get.put(StoreDetailController());
-    // detail.item = item;
-    // Get.to(StoreDetailView());
+    var item = this.stores[index];
+    var detail = Get.put(StoreDetailController(item));
+    detail.item = item;
+    Get.to(StoreDetailView());
   }
 }

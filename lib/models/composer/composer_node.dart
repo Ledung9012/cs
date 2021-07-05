@@ -3,16 +3,14 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/extension/string_extension.dart';
 import 'package:mobile/models/composer/composer_description.dart';
 import 'package:mobile/models/composer/composer_header.dart';
 import 'package:mobile/models/composer/composer_image.dart';
 import 'package:mobile/models/composer/composer_image_group.dart';
 import 'package:mobile/models/composer/composer_title.dart';
 import 'package:mobile/models/file_upload.dart';
-import 'package:mobile/extension/string_extension.dart';
 import 'package:mobile/modules/news/create/news_create_controller.dart';
-
-
 
 enum ComposerType { HEADER, DESCRIPTION, LIST, IMAGES, IMAGE, TITLE }
 
@@ -25,15 +23,18 @@ extension Com on ComposerType {
 class ComposerNode {
   InputDecoration completeStyle = InputDecoration(border: InputBorder.none);
   InputDecoration editingStyle = InputDecoration(hintText: "Thêm mới tiêu để ");
+
   TextEditingController headerEditController = TextEditingController();
-
-
   String key = generateRandomString(12);
   ComposerType type = ComposerType.HEADER;
   NewsCreateController controller = NewsCreateController();
-  var value;
+  dynamic value;
 
-  ComposerNode(this.type, this.controller);
+  var name = "" ;
+  var image = "";
+  var date = "" ;
+
+  ComposerNode({required this.type, required this.controller});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -42,7 +43,6 @@ class ComposerNode {
     if (type == ComposerType.IMAGE) {
       // data['value']  =  value.map((element){return element.toJson();});
     }
-
     return data;
   }
 
@@ -130,9 +130,9 @@ class ComposerNode {
   }
 }
 
-
 String generateRandomString(int len) {
   var r = Random();
-  const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  const _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   return List.generate(len, (index) => _chars[r.nextInt(_chars.length)]).join();
 }
