@@ -453,7 +453,9 @@ class CartView extends GetView<CartController> {
                           Container(
                               child: TextButton(
                                   onPressed: () {
-                                    controller.remove(index);
+
+                                    Template.
+
                                   },
                                   child: Icon(
                                     Icons.delete_outline_rounded,
