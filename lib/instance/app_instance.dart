@@ -50,6 +50,11 @@ class AppInstance with WidgetsBindingObserver {
   // Tính năng quảy lý tin tức
   var enableNewsManagement = false;
 
+  // Tính năng Trợ giúp
+  var enableHelpCenter = true;
+
+
+
   // Local Value
   var appName = "packageInfo.appName";
   var packageName = "";
@@ -117,6 +122,9 @@ class AppInstance with WidgetsBindingObserver {
         getMap("enableInternalShopping").boolValue("value");
     enableStore = getMap("enableStore").boolValue("value");
     accessTradeURL = getMap("accessTradeURL").stringValue("value");
+    enableHelpCenter = getMap("enableHelpCenter").boolValue("value");
+    enableNewsManagement = getMap("enableNewsManagement").boolValue("value");
+
     var homeController = Get.put(HomeController());
     homeController.loadConfigComplete = true;
   }

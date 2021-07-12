@@ -20,23 +20,36 @@ class AddressAddView extends GetView<AddressAddController> {
       theme: ThemeData(primaryColor: Template.primaryColor),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          centerTitle: false,
-          title: Row(
-            children: [
-              GestureDetector(
-                  onTap: () => Get.back(),
-                  child: Icon(Icons.arrow_back_ios_rounded)),
-              SizedBox(
-                width: 12,
-              ),
-              Text(getTitlte().capitalize!),
-            ],
-          ),
-        ),
+        appBar: Template.appBar(getTitlte(), child: [
+          deleteUI(),
+        ]),
         body: content(),
       ),
     );
+  }
+
+  Widget deleteUI() {
+    if (addState == AddressAddType.UPDATE) {
+      return GestureDetector(
+          onTap: () {
+            controller.delete(
+                id: item!.id,
+                onSuccess: () {
+                  Template.dialogInfoAction("Xoá thành công", () {
+                    Get.back();
+                    onComplete(item!);
+                  });
+                });
+          },
+          child: Container(
+              width: 40,
+              height: 40,
+              child: Icon(
+                Icons.delete_outline_outlined,
+                size: 24,
+              )));
+    }
+    return Container();
   }
 
   Widget content() {
@@ -133,6 +146,7 @@ class AddressAddView extends GetView<AddressAddController> {
                 decoration: inputDeco("Số nhà, đường"),
               ),
             ),
+            acceptView()
           ],
         ),
       ),

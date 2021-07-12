@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:mobile/modules/center/contact/support_controller.dart';
+import 'package:mobile/modules/center/support/support_controller.dart';
 
 class HelpCenterController extends GetxController with StateMixin {
 

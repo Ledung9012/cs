@@ -64,7 +64,6 @@ class AccountController extends GetxController {
   void onInit() {
     super.onInit();
     loadView();
-
     refresh();
   }
 
@@ -109,7 +108,7 @@ class AccountController extends GetxController {
         index: AccountMenuPage.notification);
 
     var item6 = AccountItem(
-        image: "assets/images/ic_notification.svg",
+        image: "assets/images/ic_address.svg",
         name: "Sổ địa chỉ",
         color: "2D882D",
         index: AccountMenuPage.address);
@@ -124,7 +123,9 @@ class AccountController extends GetxController {
 
     items.add(item2);
 
-    items.add(item4);
+    if (app.enableNewsManagement) {
+      items.add(item4);
+    }
 
     items.add(item5);
 
@@ -137,7 +138,6 @@ class AccountController extends GetxController {
   @override
   void refresh() {
     super.refresh();
-
     userInstance.alreadyLogin().then((value) {
       this.alreadyLogin.value = value;
       userInfo();
@@ -224,9 +224,6 @@ class AccountController extends GetxController {
       Get.lazyPut<AddressController>(() => AddressController());
       Get.to(() => AddressView());
     }
-
-
-
 
     if (item.index == AccountMenuPage.logout) {
       logout();

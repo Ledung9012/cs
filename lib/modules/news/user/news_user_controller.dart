@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mobile/instance/user_instance.dart';
 import 'package:mobile/models/news.dart';
-import 'package:mobile/modules/account/login/login_controller.dart';
-import 'package:mobile/modules/account/login/login_view.dart';
 import 'package:mobile/modules/news/create/news_create_controller.dart';
 import 'package:mobile/modules/news/create/news_create_view.dart';
 import 'package:mobile/modules/news/news_provider.dart';
@@ -18,6 +16,8 @@ class NewsUserController extends GetxController {
   void onInit() {
     loadNews();
   }
+
+
 
   void loadNews() {
     _news.clear();

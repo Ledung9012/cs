@@ -45,6 +45,7 @@ class AddressView extends GetView<AddressController> {
 
   Widget item(index) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: (){
 
         controller.detail(index);

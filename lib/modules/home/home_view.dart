@@ -28,8 +28,6 @@ class _HomeViewState extends State<HomeView> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
-
-
     if(state == AppLifecycleState.resumed){
 
       print("Appstate : resumed");

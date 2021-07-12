@@ -10,61 +10,19 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
   double marginField = 16.0;
 
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          resizeToAvoidBottomInset: false,
-          body: Container(
-            margin: EdgeInsets.only(left: 16, right: 16, top: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildHeader(),
-                buildContent(),
-                buildBottom(),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildHeader() {
-    return Container(
-      child: Text(
-        "Thay Đổi Mật Khẩu",
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-      ),
-    );
-  }
-
-  Widget buildBottom() {
-    return Container(
-      height: 68,
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            child: TextButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: Icon(Icons.arrow_back_rounded),
-              style: Template.backButtonStyle,
-            ),
-          ),
-        ],
+    return MaterialApp(
+      theme: ThemeData(primaryColor: Template.primaryColor),
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: Template.appBar("Sổ địa chỉ"),
+        body: buildContent(),
       ),
     );
   }
 
   Widget buildContent() {
-    return Expanded(
-        child: Container(
-      margin: EdgeInsets.only(top: 48),
+    return Container(
+      margin: EdgeInsets.only(left: 16,right: 16,top: 16),
       child: Column(
         children: [
           Container(
@@ -109,8 +67,6 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
                 child: Text("Xác Nhận"),
                 style: Template.primaryButtonStyle,
                 onPressed: () {
-
-
                   controller.sumbit(onSuccess: () {
                     Template.snackSuccess("Thay đổi mật khẩu thành công");
                   }, onFailure: (error) {
@@ -120,7 +76,7 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
               )),
         ],
       ),
-    ));
+    );
   }
 
   InputDecoration decor({required String hintText, required String label}) {

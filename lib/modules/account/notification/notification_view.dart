@@ -11,69 +11,21 @@ class NotificationView extends GetView<NotificationController> {
       TextStyle(color: Template.subColor, fontSize: 16);
 
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: SafeArea(
-        child: Scaffold(
-          body: Container(
-            margin: EdgeInsets.only(left: 16, right: 16, top: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildHeader(),
-                buildContent(),
-                buildBottom(),
-              ],
-            ),
-          ),
+    return MaterialApp(
+      theme: ThemeData(primaryColor: Template.primaryColor),
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: Template.appBar(
+          "Trung tâm thông báo",
         ),
+        body: buildContent(),
       ),
     );
   }
 
-  Widget buildHeader() {
-    return Container(
-      child: Text(
-        "Danh sách bài viết",
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-      ),
-    );
-  }
-
-  Widget buildBottom() {
-    return Container(
-      height: 68,
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            child: TextButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: Icon(Icons.arrow_back_rounded),
-              style: Template.backButtonStyle,
-            ),
-          ),
-          Expanded(child: Container()),
-          // Container(
-          //     height: 40,
-          //     child: TextButton(
-          //       onPressed: () {
-          //         controller.create();
-          //       },
-          //       child: Text("Viết bài"),
-          //       style: Template.primaryButtonStyle,
-          //     ))
-        ],
-      ),
-    );
-  }
 
   Widget buildContent() {
-    return Expanded(
-        child: Container(
-      margin: EdgeInsets.only(top: 24),
+    return Container(
       child: Obx(() {
         return ListView.builder(
             itemCount: controller.newsLength,
@@ -81,17 +33,6 @@ class NotificationView extends GetView<NotificationController> {
               return productItem(index);
             });
       }),
-    ));
-  }
-
-  Widget newsItem(int index) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        child: Card(
-          margin: EdgeInsets.only(left: 0, right: 0, bottom: 8),
-        ),
-      ),
     );
   }
 
@@ -102,39 +43,51 @@ class NotificationView extends GetView<NotificationController> {
         // controller.goDetail(index);
       },
       child: Container(
-        margin: EdgeInsets.only(top: 12,bottom: 12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        margin: EdgeInsets.only(left: 16,right: 16,top: 12),
+        child: Column(
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(right: 8, top: 6),
-                  width: 24, height: 24,
-                  child: Center(child: Icon(Icons.create,color: Colors.white,size: 16,)),
-                  decoration: BoxDecoration(color: Colors.lightBlue, borderRadius: BorderRadius.circular(12)),
-                ),
-              ],
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 12, top: 6),
+                        width: 24,
+                        height: 24,
+                        child: Center(
+                            child: Icon(
+                          Icons.shopping_cart_outlined,
+                          color: Colors.white,
+                          size: 12,
+                        )),
+                        decoration: BoxDecoration(
+                            color: Colors.lightBlue,
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                      child: Container(
+                    child: itemName(controller.item(index)),
+                  ))
+                ],
+              ),
             ),
-            Expanded(
-                child: Container(
-                  child: itemName(controller.item(index)),
-                ))
+            Container(margin: EdgeInsets.only(left: 36 , top: 12), height: 1,width: double.infinity,color: Template.subColor.withOpacity(0.1),)
           ],
         ),
       ),
     );
   }
 
-
-  Widget itemName(SNotification item ){
-    return  RichText(
+  Widget itemName(SNotification item) {
+    return RichText(
       textAlign: TextAlign.left,
       text: new TextSpan(
-
-
         style: new TextStyle(
           fontSize: 14.0,
           color: Colors.black,
@@ -142,11 +95,16 @@ class NotificationView extends GetView<NotificationController> {
         ),
         children: <TextSpan>[
           new TextSpan(text: 'Bạn đã mua '),
-          new TextSpan(text: item.itemName(), style: new TextStyle(fontWeight: FontWeight.w600,color: Template.primaryTextColor)),
-          new TextSpan(text: '. Vui lòng viết bài review sản phẩm này để nhận được ưu đãi tử Save365.'),
+          new TextSpan(
+              text: item.itemName(),
+              style: new TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Template.primaryTextColor)),
+          new TextSpan(
+              text:
+                  '. Vui lòng viết bài review sản phẩm này để nhận được ưu đãi tử Save365.'),
         ],
       ),
     );
-
   }
 }

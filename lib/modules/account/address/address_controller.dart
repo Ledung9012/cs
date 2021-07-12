@@ -29,7 +29,9 @@ class AddressController extends GetxController {
     Get.put(AddressAddController());
 
     Get.to(AddressAddView(
-        addState: AddressAddType.CREATE, item: null, onComplete: (value) {}));
+        addState: AddressAddType.CREATE, item: null, onComplete: (value) {
+      loadData();
+    }));
   }
 
   void detail(int index) {

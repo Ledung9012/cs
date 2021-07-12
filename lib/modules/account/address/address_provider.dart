@@ -90,4 +90,21 @@ class AddressProvider extends GetConnect {
       onError(error.toString());
     });
   }
+
+
+  static void deleteItem( {required int id, required Function() success,
+        required Function(String) onError}) {
+    Map body = Map();
+    body['id'] = id;
+
+    apiRequest.msRequest(APIFunction.ADDRESS_DELETE, body).then((response) {
+      if (response.hasError()) {
+        onError(response.errorDisplay());
+      } else {
+        success();
+      }
+    }).onError((error, stackTrace) {
+      onError(error.toString());
+    });
+  }
 }

@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile/instance/templace_instance.dart';
-import 'package:mobile/modules/account/address/address_add_controller.dart';
-import 'package:mobile/modules/account/address/address_add_view.dart';
+import 'package:mobile/instance/user_instance.dart';
+import 'package:mobile/modules/stores/cart/address_popup_view.dart';
 import 'package:mobile/modules/stores/cart/cart_controller.dart';
 
 class CartView extends GetView<CartController> {
@@ -15,7 +15,7 @@ class CartView extends GetView<CartController> {
       home: Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          title:  Row(
+          title: Row(
             children: [
               GestureDetector(
                   onTap: () => Get.back(),
@@ -62,7 +62,15 @@ class CartView extends GetView<CartController> {
       color: Template.primaryColor,
       height: 48,
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          controller.submit(
+              onSuccess: () {
+                Template.dialogInfoAction("Đặt hàng thành công", () {
+                  Get.back();
+                });
+              },
+              onFailure: (value) {});
+        },
         child: Text(
           "Xác Nhận",
           style: TextStyle(color: Colors.white),
@@ -223,7 +231,9 @@ class CartView extends GetView<CartController> {
                   ),
                 ),
                 Container(
-                  child: Text("150.000 vnđ"),
+                  child: Obx(() {
+                    return Text(controller.price.value);
+                  }),
                 )
               ],
             ),
@@ -268,7 +278,9 @@ class CartView extends GetView<CartController> {
                   ),
                 ),
                 Container(
-                  child: Text("- vnđ"),
+                  child: Obx(() {
+                    return Text(controller.price.value);
+                  }),
                 )
               ],
             ),
@@ -279,45 +291,51 @@ class CartView extends GetView<CartController> {
   }
 
   Widget address() {
-    return Container(
-      padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
-      color: Colors.white,
-      child: Column(
-        children: [
-          Container(
-            child: Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(right: 8),
-                  child: Icon(
-                    Icons.location_on_rounded,
-                    color: Colors.redAccent,
+    return GestureDetector(
+      onTap: () {
+        controller.goAdd();
+      },
+      child: Container(
+        padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
+        color: Colors.white,
+        child: Column(
+          children: [
+            Container(
+              child: Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(right: 8),
+                    child: Icon(
+                      Icons.location_on_rounded,
+                      color: Colors.redAccent,
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: Text(
-                    "Lê Dũng  0971568901",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  Expanded(
+                    child: Text(
+                      controller.addressTitle(),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
                   ),
-                ),
-                Icon(Icons.more_vert_outlined)
-              ],
+                  Icon(Icons.more_vert_outlined)
+                ],
+              ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 30, top: 8),
-            child: Row(
-              children: [
-                Flexible(
-                  child: Text(
-                    controller.address.display,
-                    style: TextStyle(fontSize: 14, color: Template.subColor),
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
+            Container(
+              margin: EdgeInsets.only(left: 30, top: 8),
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      controller.address.displayDetail(),
+                      style: TextStyle(fontSize: 14, color: Template.subColor),
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -325,9 +343,7 @@ class CartView extends GetView<CartController> {
   Widget addressNone() {
     return GestureDetector(
       onTap: () {
-
         controller.goAdd();
-
       },
       child: Container(
         padding: EdgeInsets.only(left: 12, right: 12, top: 16, bottom: 16),
@@ -386,8 +402,7 @@ class CartView extends GetView<CartController> {
           ),
           Container(
             margin: EdgeInsets.only(left: 30, top: 8),
-            child: Obx((){
-
+            child: Obx(() {
               return ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
@@ -396,7 +411,6 @@ class CartView extends GetView<CartController> {
                   itemBuilder: (context, index) {
                     return item(index);
                   });
-
             }),
           )
         ],
@@ -453,9 +467,13 @@ class CartView extends GetView<CartController> {
                           Container(
                               child: TextButton(
                                   onPressed: () {
-
-                                    Template.
-
+                                    Template.dialogInfoList(
+                                        "Bạn có muốn xoá sản phẩm khỏi giỏ hàng không",
+                                        ["Đóng", "Xoá"], (val) {
+                                      if (val == 1) {
+                                        controller.remove(index);
+                                      }
+                                    });
                                   },
                                   child: Icon(
                                     Icons.delete_outline_rounded,

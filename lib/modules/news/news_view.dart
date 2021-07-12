@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobile/instance/app_instance.dart';
 import 'package:mobile/instance/templace_instance.dart';
 import 'package:mobile/modules/news/detail/news_detail_controller.dart';
 import 'package:mobile/modules/news/detail/news_detail_view.dart';
@@ -8,16 +9,9 @@ import 'package:mobile/modules/news/news_controller.dart';
 import 'package:mobile/modules/news/news_provider.dart';
 
 class NewsView extends GetView<NewsController> {
-
-
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
+
     Widget addButton = GestureDetector(
         onTap: () {
           controller.create();
@@ -40,6 +34,13 @@ class NewsView extends GetView<NewsController> {
     );
 
 
+    List<Widget> child = [] ;
+    if(app.enableNewsManagement){
+      child.add(addButton);
+      child.add(separator);
+
+    }
+
     return MaterialApp(
       theme: ThemeData(primaryColor: Template.primaryColor),
       debugShowCheckedModeBanner: false,
@@ -55,15 +56,14 @@ class NewsView extends GetView<NewsController> {
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return [
                   Template.sliderAppBar(
-                      title: "cửa hàng",
+                      title: "Giới thiệu sản phẩm",
                       items: controller.categories
                           .map((item) => item.name)
                           .toList(),
-                      menu: [separator, addButton])
+                      menu:child)
                 ];
               },
               body: TabBarView(
-
                 children: controller.categories
                     .map((item) => ItemView(
                           id: item.id,

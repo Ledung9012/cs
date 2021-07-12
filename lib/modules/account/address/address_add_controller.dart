@@ -116,6 +116,9 @@ class AddressAddController extends GetxController {
     request.name = nameEdit.text;
     request.phone = phoneEdit.text;
     request.description = descriptionEdit.text;
+
+
+
     request.display = _description +
         ", " +
         _ward.display() +
@@ -125,6 +128,14 @@ class AddressAddController extends GetxController {
         _province.display();
 
     if (addType == AddressAddType.NONE) {
+
+
+
+      request.wardName = _ward.display() ;
+      request.districtName = _district.display();
+      request.provinceName = _province.display() ;
+
+
       onSuccess(request);
       Get.back();
     }
@@ -136,25 +147,33 @@ class AddressAddController extends GetxController {
             Template.dialogInfoAction("Thêm mới địa chỉ thành công", () {
               Get.back();
               onSuccess(request);
-
             });
           },
           onError: (error) {});
     }
 
     if (addType == AddressAddType.UPDATE) {
-      request.id = address.id ;
+      request.id = address.id;
       AddressProvider.update(
           request: request,
           success: () {
             Template.dialogInfoAction("Cập nhật địa chỉ thành công", () {
-
               Get.back();
               onSuccess(request);
-
             });
           },
           onError: (error) {});
     }
+  }
+
+  void clear() {}
+
+  void delete({required int id, required Function onSuccess}) {
+    AddressProvider.deleteItem(
+        id: id,
+        success: () {
+          onSuccess();
+        },
+        onError: (error) {});
   }
 }

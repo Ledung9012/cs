@@ -52,7 +52,7 @@ class ProductController extends GetxController with StateMixin {
     } else {
       var cartGo = Get.put(CartController());
       cartGo.refresh();
-      Get.to(CartView());
+      Get.to(() => CartView());
     }
   }
 

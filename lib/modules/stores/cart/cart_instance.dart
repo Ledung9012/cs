@@ -61,4 +61,9 @@ class CartInstance {
   String  sumDisplay(){
     return products.sumBy((point) => point.price).toDouble().currencyValue();
   }
+
+  double  sum(){
+    return products.sumBy((point) => point.price).toDouble();
+  }
+
 }

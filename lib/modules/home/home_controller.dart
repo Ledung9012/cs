@@ -77,14 +77,14 @@ class HomeController extends GetxController {
     ));
 
 
-    page.add(HelpCenterView());
-    barItems.add(bottomNavigationBarItem(
-      icon: Icons.help_center_outlined,
-      label: 'Trợ Giúp',
-    ));
+    if (app.enableHelpCenter) {
+      page.add(HelpCenterView());
+      barItems.add(bottomNavigationBarItem(
+        icon: Icons.help_center_outlined,
+        label: 'Trợ Giúp',
+      ));
+    }
 
-
-    print("barItems.leobs : $barItems.leobs");
     _loadConfigComplete.refresh();
   }
 
