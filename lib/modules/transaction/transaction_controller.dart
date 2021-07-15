@@ -2,11 +2,14 @@ import 'package:get/get.dart';
 import 'package:mobile/extension/string_extension.dart';
 import 'package:mobile/instance/user_instance.dart';
 import 'package:mobile/models/transaction.dart';
+import 'package:mobile/modules/transaction/history/transaction_history_controller.dart';
+import 'package:mobile/modules/transaction/history/transaction_history_view.dart';
 import 'package:mobile/modules/transaction/transaction_provider.dart';
+import 'package:mobile/modules/transaction/withdraw/withdraw_controller.dart';
+import 'package:mobile/modules/transaction/withdraw/withdraw_view.dart';
 
 class TransactionController extends GetxController {
   var _provider = TransactionProvider();
-
   var transactionSummary = TransactionSummary().obs;
 
   String get available => transactionSummary.value.available.currencyValue();
@@ -14,18 +17,6 @@ class TransactionController extends GetxController {
   String get withdraw => transactionSummary.value.withdraw.currencyValue();
 
   String get cashback => transactionSummary.value.cashback.currencyValue();
-
-  RxList<Transaction> transactions = List<Transaction>.empty().obs;
-
-  void history() {
-    _provider.history(
-        userId: userInstance.userId,
-        onSuccess: (value) {
-          transactions.addAll(value);
-          transactions.refresh();
-        },
-        onError: (value) {});
-  }
 
   @override
   void onReady() {
@@ -45,7 +36,19 @@ class TransactionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    history();
     summary();
+  }
+
+  void goHistory() {
+    Get.lazyPut<TransactionHistoryController>(
+        () => TransactionHistoryController());
+    Get.to(() => TransactionHistoryView());
+  }
+
+  void goMission() {}
+
+  void goWithdraw() {
+    Get.lazyPut<WithdrawController>(() => WithdrawController(complete: () {}));
+    Get.to(() => WithdrawView());
   }
 }

@@ -24,7 +24,6 @@ extension StringExtension on String {
     return List.generate(len, (index) => _chars[r.nextInt(_chars.length)]).join();
   }
 
-
   T toEnum<T>(List<T> values) {
     return values.firstWhere(
             (e) =>

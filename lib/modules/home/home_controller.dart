@@ -15,7 +15,7 @@ import 'package:mobile/modules/stores/store_view.dart';
 class HomeController extends GetxController {
   var tabIndex = 0;
   var _loadConfigComplete = false.obs;
-  var selectEndpoint = false.obs ;
+  var selectEndpoint = false.obs;
 
   List<Widget> page = [];
   List<BottomNavigationBarItem> barItems = [];
@@ -48,11 +48,14 @@ class HomeController extends GetxController {
 
     page.clear();
     barItems.clear();
-    page.add(NewsView());
-    barItems.add(bottomNavigationBarItem(
-      icon: Icons.explore_outlined,
-      label: 'Bản Tin',
-    ));
+
+    if (app.enableNews) {
+      page.add(NewsView());
+      barItems.add(bottomNavigationBarItem(
+        icon: Icons.explore_outlined,
+        label: 'Bản Tin',
+      ));
+    }
 
     if (app.enableInternalShopping) {
       page.add(ProductView());
@@ -62,11 +65,11 @@ class HomeController extends GetxController {
       ));
     }
 
-    if (app.enableStore) {
+    if (app.enableStore || app.devMode) {
       page.add(StoreView());
       barItems.add(bottomNavigationBarItem(
         icon: Icons.featured_play_list_outlined,
-        label: 'Thưởng hiệu',
+        label: 'Thương hiệu',
       ));
     }
 
@@ -75,7 +78,6 @@ class HomeController extends GetxController {
       icon: Icons.account_box_outlined,
       label: 'Tài khoản',
     ));
-
 
     if (app.enableHelpCenter) {
       page.add(HelpCenterView());

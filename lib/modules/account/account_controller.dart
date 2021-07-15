@@ -127,7 +127,13 @@ class AccountController extends GetxController {
       items.add(item4);
     }
 
-    items.add(item5);
+
+
+
+    if (app.enableNotification) {
+      items.add(item5);
+    }
+
 
     if (app.enableInternalShopping) {
       items.add(item6);

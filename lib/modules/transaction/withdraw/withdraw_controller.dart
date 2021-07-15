@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobile/instance/user_instance.dart';
 import 'package:mobile/models/bank.dart';
 import 'package:mobile/models/transaction.dart';
 import 'package:mobile/modules/transaction/transaction_provider.dart';
@@ -111,7 +112,7 @@ class WithdrawController extends GetxController {
 
   void summary() {
     _provider.summary(
-        userId: 2,
+        userId: userInstance.userId,
         onSuccess: (value) {
           transactionSummary.value = value;
         },

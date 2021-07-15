@@ -12,6 +12,8 @@ class StoreController extends GetxController {
   int get categoryCount => categories.length;
   RxList<Category> categories = List<Category>.empty().obs;
 
+
+
   int get siteCount => stores.length;
 
   var _selectedIndex = 0;

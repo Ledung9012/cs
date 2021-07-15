@@ -21,6 +21,7 @@ enum Environment {
 
 class AppInstance with WidgetsBindingObserver {
   static final AppInstance _singleton = AppInstance._internal();
+  List items = [];
 
   AppInstance._internal();
 
@@ -36,26 +37,23 @@ class AppInstance with WidgetsBindingObserver {
 
   bool get isIOS => Platform.isIOS;
 
-  List items = [];
-  var enableInternalShopping = false;
-  var enableStore = false;
-  var accessTradeURL = ""; // ACCESSTrade deep link
   var environment = Environment.PRODUCTION;
 
-  //allway call when app active
+  // Services Value-----------------------------
+  var enableInternalShopping = false;
+  var enableStore = false;
+  var accessTradeURL = "";
   var forceUpdate = false;
-
-  var version = ""; // version hiện hành trên store
-
-  // Tính năng quảy lý tin tức
+  var version = "";
   var enableNewsManagement = false;
-
-  // Tính năng Trợ giúp
+  var enableNews = false;
   var enableHelpCenter = true;
+  var enableNotification = true;
 
 
 
-  // Local Value
+
+  // Local Value-----------------------------
   var appName = "packageInfo.appName";
   var packageName = "";
   var appVersion = "";
@@ -124,6 +122,8 @@ class AppInstance with WidgetsBindingObserver {
     accessTradeURL = getMap("accessTradeURL").stringValue("value");
     enableHelpCenter = getMap("enableHelpCenter").boolValue("value");
     enableNewsManagement = getMap("enableNewsManagement").boolValue("value");
+    enableNews = getMap("enableNews").boolValue("value");
+    enableNotification = getMap("enableNotification").boolValue("value");
 
     var homeController = Get.put(HomeController());
     homeController.loadConfigComplete = true;

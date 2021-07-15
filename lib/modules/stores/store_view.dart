@@ -4,98 +4,42 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile/instance/templace_instance.dart';
 import 'package:mobile/modules/stores/store_controller.dart';
+import 'package:mobile/modules/stores/store_detail/store_detail_controller.dart';
+import 'package:mobile/modules/stores/store_detail/store_detail_view.dart';
+import 'package:mobile/modules/stores/store_provider.dart';
 
 class StoreView extends GetView<StoreController> {
   @override
+  @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-      backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: false, // set it to false
-      body: Column(
-        children: [buildHeader(), buildContent()],
-      ),
-    );
-  }
-
-  Widget buildHeader() {
-    return Container(
-      color: Template.primaryColor,
-      width: double.infinity,
-      height: 108,
-      child: Column(
-        children: [
-          Container(
-              padding: EdgeInsets.only(top: 24, left: 12, right: 12),
-              height: 108,
-              width: double.infinity,
-              color: Template.primaryColor,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Thương hiệu hoàn tiền",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  buildCategory()
-                ],
-              )),
-        ],
-      ),
-    );
-  }
-
-  Widget buildContent() {
-    return Expanded(
-      child: Container(
-        color: Colors.white,
-        child: Obx(() {
-          return GridView.builder(
-            itemCount: controller.siteCount,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 1.48,
-                crossAxisCount: 3,
-                crossAxisSpacing: 0,
-                mainAxisSpacing: 0),
-            itemBuilder: (BuildContext context, int index) {
-              return buildCell(index);
-            },
-          );
-        }),
-      ),
-    );
-  }
-
-  Widget buildCell(int index) {
-    return GestureDetector(
-      onTap: () {
-        controller.detail(index);
-      },
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border(
-              right: BorderSide(width: 1, color: Colors.black12),
-              bottom: BorderSide(width: 1, color: Colors.black12),
-            )),
-        child: Center(
-          child: Container(
-            padding: EdgeInsets.all(12),
-            width: double.infinity,
-            height: double.infinity,
-            child: CachedNetworkImage(
-              imageUrl: controller.store(index).imageURL(),
+    return MaterialApp(
+      theme: ThemeData(primaryColor: Template.primaryColor),
+      debugShowCheckedModeBanner: false,
+      home: Obx(() {
+        return DefaultTabController(
+          length: controller.categoryCount,
+          child: Scaffold(
+            body: NestedScrollView(
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return [
+                  Template.sliderAppBar(
+                      menu: [],
+                      title: "Thương hiệu hoàn tiền",
+                      items: controller.categories
+                          .map((item) => item.name)
+                          .toList())
+                ];
+              },
+              body: TabBarView(
+                children: controller.categories
+                    .map((item) => ItemView(item.id))
+                    .toList(),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
@@ -136,6 +80,85 @@ class StoreView extends GetView<StoreController> {
                   );
                 });
           })),
+    );
+  }
+
+  Widget tabItem(String value) {
+    return Container(margin: EdgeInsets.only(bottom: 12), child: Text(value));
+  }
+}
+
+class ItemView extends StatefulWidget {
+  int id = -1;
+
+  ItemView(this.id);
+
+  @override
+  _State createState() => _State();
+}
+
+class _State extends State<ItemView> {
+  var stores = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      padding: EdgeInsets.all(0),
+      itemCount: stores.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          childAspectRatio: 1.48,
+          crossAxisCount: 3,
+          crossAxisSpacing: 0,
+          mainAxisSpacing: 0),
+      itemBuilder: (BuildContext context, int index) {
+        return buildCell(index);
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    load();
+    super.initState();
+  }
+
+  void load() {
+    stores.clear();
+    StoreProvider provider = StoreProvider();
+    provider.index(widget.id, onSuccess: (value) {
+      setState(() {
+        stores.addAll(value);
+        print("---------------${stores.length}");
+      });
+    }, onError: (value) {});
+  }
+
+  Widget buildCell(int index) {
+    return GestureDetector(
+      onTap: () {
+        var item = this.stores[index];
+        var detail = Get.put(StoreDetailController(item));
+        detail.item = item;
+        Get.to(StoreDetailView());
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              right: BorderSide(width: 1, color: Colors.black12),
+              bottom: BorderSide(width: 1, color: Colors.black12),
+            )),
+        child: Center(
+          child: Container(
+            padding: EdgeInsets.all(12),
+            width: double.infinity,
+            height: double.infinity,
+            child: CachedNetworkImage(
+              imageUrl: stores[index].imageURL(),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

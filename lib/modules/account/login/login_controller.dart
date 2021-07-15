@@ -137,7 +137,7 @@ class LoginController extends GetxController {
   }
 
   void smsAuthentication() {
-    FirebaseAuth.instance.setSettings(appVerificationDisabledForTesting: true);
+    // FirebaseAuth.instance.setSettings(appVerificationDisabledForTesting: true);
 
     var countryCode = "+84";
     print("Phone remove--------------${_phone.removeFirst()}");

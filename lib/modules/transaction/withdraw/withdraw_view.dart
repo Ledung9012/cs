@@ -5,40 +5,30 @@ import 'package:mobile/instance/templace_instance.dart';
 import 'package:mobile/modules/transaction/withdraw/withdraw_controller.dart';
 
 class WithdrawView extends GetView<WithdrawController> {
-  TextStyle generalTextStyle = TextStyle(color: Template.subColor, fontSize: 16);
+  TextStyle generalTextStyle =
+      TextStyle(color: Template.subColor, fontSize: 16);
 
   final Function? onComplete;
+
   WithdrawView({this.onComplete});
 
   double itemHeight = 48.0;
   double marginField = 16.0;
 
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: Container(
-            padding: EdgeInsets.only(left: 16, top: 24, right: 16),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildHeader(),
-                  buildInfo(),
-                ],
-              ),
-            ),
-          ),
-        ),
+    return MaterialApp(
+      theme: ThemeData(primaryColor: Template.primaryColor),
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: Template.appBar("Rút Tiền"),
+        body: buildInfo(),
       ),
     );
   }
 
   Widget buildInfo() {
     return Container(
-        margin: EdgeInsets.only(top: 24, bottom: 24),
+        margin: EdgeInsets.only(top: 24, bottom: 24, left: 16, right: 16),
         child: Column(
           children: [
             Row(
@@ -46,7 +36,8 @@ class WithdrawView extends GetView<WithdrawController> {
                 Expanded(child: Text("Số dư khả dụng")),
                 Obx(() {
                   return Text(
-                    controller.transactionSummary.value.available.currencyValue(),
+                    controller.transactionSummary.value.available
+                        .currencyValue(),
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -60,12 +51,17 @@ class WithdrawView extends GetView<WithdrawController> {
         ));
   }
 
-
-  Widget buildBankList()
-  {
-
+  Widget buildBankList() {
     print("bank : ${controller.banks[0].name}");
-    var items = controller.banks.map((item) =>  DropdownMenuItem(value: item.id.toString(), child: Text(item.name, style: TextStyle(color: Colors.black),),)).toList();
+    var items = controller.banks
+        .map((item) => DropdownMenuItem(
+              value: item.id.toString(),
+              child: Text(
+                item.name,
+                style: TextStyle(color: Colors.black),
+              ),
+            ))
+        .toList();
 
     return DropdownButtonFormField(
       decoration: const InputDecoration(
@@ -91,11 +87,10 @@ class WithdrawView extends GetView<WithdrawController> {
               border: Border.all(color: Template.subColor),
               borderRadius: BorderRadius.circular(4)),
           padding: EdgeInsets.only(left: 12, right: 12, top: 0),
-          child: Obx((){
-            if(controller.banks.length > 0) {
+          child: Obx(() {
+            if (controller.banks.length > 0) {
               return buildBankList();
-              }
-            else{
+            } else {
               return Container();
             }
           }),
@@ -137,40 +132,21 @@ class WithdrawView extends GetView<WithdrawController> {
 
   Widget buildButton() {
     return Container(
-      margin: EdgeInsets.only(top: 24),
+      height: 48,
+      width: double.infinity,
+      margin: EdgeInsets.only(top: 12),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Expanded(
-          child: Container(
-            height: 40,
-            child: TextButton(
-              onPressed: () {
-                Get.back();
-                this.onComplete!();
-              },
-              child: Text("Quay Lại"),
-              style: Template.subButtonStyle,
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 24,
-        ),
-        Expanded(
-          child: Container(
-            height: 40,
-            child: TextButton(
-              onPressed: () {
-
-                controller.accept((){
-                  Template.snackSuccess("Rút tiền thành công");
-                }, (error){
-
-                  Template.dialogError(error);
-                });
-              },
-              child: Text("Xác Nhân"),
-              style: Template.primaryButtonStyle,
-            ),
+          child: TextButton(
+            onPressed: () {
+              controller.accept(() {
+                Template.snackSuccess("Rút tiền thành công");
+              }, (error) {
+                Template.dialogError(error);
+              });
+            },
+            child: Text("Xác Nhân"),
+            style: Template.primaryButtonStyle,
           ),
         )
       ]),
@@ -183,35 +159,6 @@ class WithdrawView extends GetView<WithdrawController> {
       hintText: hintText,
       border: new OutlineInputBorder(
           borderSide: new BorderSide(color: Colors.black.withOpacity(0.2))),
-    );
-  }
-
-  Widget buildHeader() {
-    return Container(
-      child: Text(
-        "Rút tiền đến tài khoản",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-      ),
-    );
-  }
-
-  Widget buildBottom() {
-    return Container(
-      height: 68,
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            child: TextButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: Icon(Icons.arrow_back_rounded),
-              style: Template.backButtonStyle,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
