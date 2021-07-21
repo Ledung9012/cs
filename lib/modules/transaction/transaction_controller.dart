@@ -18,6 +18,10 @@ class TransactionController extends GetxController {
 
   String get cashback => transactionSummary.value.cashback.currencyValue();
 
+  String get withdraw_process => transactionSummary.value.withdraw_process.currencyValue();
+  String get cashback_process => transactionSummary.value.cashback_process.currencyValue();
+
+
   @override
   void onReady() {
     // TODO: implement onReady

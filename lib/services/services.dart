@@ -29,6 +29,10 @@ enum APIFunction {
   USER_SUPPORT,
   USER_FAQ,
 
+  //--------------------NOTIFICATION
+  NOTIFICATION_UPDATE_TOKEN,
+
+
   //--------------------TRANSACTION
   TRANSACTION_SUMMARY,
   TRANSACTION_HISTORY,
@@ -43,6 +47,12 @@ enum APIFunction {
   STORE_INDEX,
   STORE_ORDER_HISTORY,
   STORE_ORDER_CREATE,
+
+
+  //--------------------CATEGORY
+
+
+
 
   //--------------------NEWS
   NEWS_CATEGORY,
@@ -127,9 +137,6 @@ class ApiRequest extends GetConnect {
       case APIFunction.NEWS_USER:
         return "/news/user";
 
-    //-------------------------------------------NOTIFICATION
-      case APIFunction.NOTIFICATION_USER:
-        return "/notification/user";
 
     //-------------------------------------------NOTIFICATION
       case APIFunction.ADDRESS_PROVINCE:
@@ -156,6 +163,14 @@ class ApiRequest extends GetConnect {
       //-------------------------------------------Metadata
       case APIFunction.APP_CONFIG:
         return "/app/config";
+
+    //-------------------------------------------NOTIFICATION
+      case APIFunction.NOTIFICATION_USER:
+        return "/notification/user";
+      case APIFunction.NOTIFICATION_UPDATE_TOKEN:
+        return "/notification/update/token";
+
+
     }
   }
 

@@ -3,13 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile/instance/templace_instance.dart';
+import 'package:mobile/instance/user_instance.dart';
+import 'package:mobile/modules/account/login/login_controller.dart';
+import 'package:mobile/modules/account/login/login_view.dart';
 import 'package:mobile/modules/stores/store_controller.dart';
-import 'package:mobile/modules/stores/store_detail/store_detail_controller.dart';
-import 'package:mobile/modules/stores/store_detail/store_detail_view.dart';
 import 'package:mobile/modules/stores/store_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StoreView extends GetView<StoreController> {
-  @override
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -133,13 +134,39 @@ class _State extends State<ItemView> {
     }, onError: (value) {});
   }
 
+  void _launchURL(url) async {
+
+    print("GO TO LINK : $url");
+    launch(url, forceSafariVC: false);
+  }
+
+
+
   Widget buildCell(int index) {
     return GestureDetector(
       onTap: () {
         var item = this.stores[index];
-        var detail = Get.put(StoreDetailController(item));
-        detail.item = item;
-        Get.to(StoreDetailView());
+
+        if (!userInstance.logged) {
+          Template.dialogInfoAction("Vui lòng đăng nhập để đươc hoàn tiền.",
+              () {
+            Get.put(
+                LoginController(authenSuccess: () {}, authenFalse: (val) {}));
+            Get.to(LoginView());
+          });
+        } else {
+          print("Go");
+          _launchURL(item.urlUtm());
+        }
+
+
+        // Get.bottomSheet(
+        //   StoreInfoView(
+        //     store: item,
+        //   ),
+        //   isScrollControlled: true,
+        //   ignoreSafeArea: false,
+        // );
       },
       child: Container(
         decoration: BoxDecoration(

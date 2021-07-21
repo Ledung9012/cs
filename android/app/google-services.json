@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "110419069353",
+    "project_id": "k-mobile-6e153",
+    "storage_bucket": "k-mobile-6e153.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110419069353:android:89a6d907b6bc2371a35cb8",
+        "android_client_info": {
+          "package_name": "ledung.wind.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "110419069353-n5bl54vbc5l14jso754vuh3n7ne78228.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ledung.wind.mobile",
+            "certificate_hash": "7ff65b651950552f29bfe6a84eeb07b274c0b326"
+          }
+        },
+        {
+          "client_id": "110419069353-isgbkdopc91hckt60a9rin8k25ogrqjg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC95ARbFjAhL2Q7M3MkMa55nGNAvixGB0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "110419069353-isgbkdopc91hckt60a9rin8k25ogrqjg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "110419069353-1k1vsld12ee7uvmi5521crsb6fedr3ma.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ledung.wind.mobile",
+                "app_store_id": "1573198040"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -113,7 +113,7 @@ class AccountController extends GetxController {
         color: "2D882D",
         index: AccountMenuPage.address);
 
-    if (app.enableStore) {
+    if (app.enableStore  || app.devMode) {
       items.add(item0);
     }
 

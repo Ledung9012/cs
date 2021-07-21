@@ -1,10 +1,10 @@
 import 'package:mobile/instance/app_instance.dart';
+import 'package:mobile/instance/user_instance.dart';
 
 class Store {
   int id = -1;
   String name = "Tiki";
   String image = "";
-  String logo = "";
   String url = "";
   bool selected = false;
 
@@ -12,20 +12,10 @@ class Store {
     id = json['id'];
     name = json['name'];
     image = json['image'];
-    logo = json['logo'];
     url = json['url'];
   }
 
-  String affiliateURL() {
-    var affLink = app.accessTradeURL.replaceAll("<url>", url);
-    affLink = affLink.replaceAll("<utm_source>", 12.toString());
-
-    print("LINK : ${affLink}");
-    return affLink;
-  }
-
   Store(this.id, this.name);
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
@@ -34,12 +24,11 @@ class Store {
     return data;
   }
 
+  String urlUtm(){
+    return url.replaceAll("<utm_source>" ,userInstance.userId.toString());
+  }
   String imageURL() {
-    if (this.image.length > 0) {
-      return app.cmsImgeURL() + this.image;
-    } else {
-      return this.logo;
-    }
+    return app.cmsImgeURL() + this.image;
   }
 
   static List<Store> list(List json) {

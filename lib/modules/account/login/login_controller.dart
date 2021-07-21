@@ -1,9 +1,11 @@
 import 'dart:convert'; // for the utf8.encode method
 
 import 'package:crypto/crypto.dart';
+import 'package:dart_notification_center/dart_notification_center.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobile/instance/fcm_instance.dart';
 import 'package:mobile/instance/user_instance.dart';
 import 'package:mobile/modules/account/account_controller.dart';
 import 'package:mobile/modules/account/account_provider.dart';
@@ -74,7 +76,9 @@ class LoginController extends GetxController {
     setState(LoginState.none);
     Get.lazyPut<RegisterController>(() => RegisterController());
     Get.to(RegisterView(complete: (){
+
       authenSuccess();
+      notifyLogonSuccess();
     },));
   }
 
@@ -94,11 +98,10 @@ class LoginController extends GetxController {
     var bytes = utf8.encode(password); // data being hashed
     var digest = md5.convert(bytes);
 
-
-    print("user------------Login");
-
     _accountProvider.login(username, digest.toString(), (user) {
-      userInstance.login(user.id);
+      userInstance.login(user.id).then((value) {
+        notifyLogonSuccess();
+      });
       onSuccess();
       logonSuccess();
     }, (p0) {
@@ -137,8 +140,6 @@ class LoginController extends GetxController {
   }
 
   void smsAuthentication() {
-    // FirebaseAuth.instance.setSettings(appVerificationDisabledForTesting: true);
-
     var countryCode = "+84";
     print("Phone remove--------------${_phone.removeFirst()}");
 
@@ -195,5 +196,10 @@ class LoginController extends GetxController {
 
   void onChangePhone() {
     setState(LoginState.none);
+
+  }
+
+  void notifyLogonSuccess(){
+    fcm.loginSuccess();
   }
 }

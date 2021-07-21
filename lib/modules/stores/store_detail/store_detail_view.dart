@@ -36,7 +36,7 @@ class StoreDetailView extends GetView<StoreDetailController> {
         Expanded(
             child: Container(
               child: WebView(
-                initialUrl: controller.item.affiliateURL(),
+                initialUrl: controller.item.url,
                 javascriptMode: JavascriptMode.unrestricted,
                 onPageFinished: (value ){
 

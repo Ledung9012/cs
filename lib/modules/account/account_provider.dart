@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:mobile/instance/user_instance.dart';
 import 'package:mobile/models/faq.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/services/services.dart';
@@ -102,7 +103,8 @@ class AccountProvider extends GetConnect {
   }
 
   void support(
-      {required Function(List<CSUser>) success, required Function(String) onError}) {
+      {required Function(List<CSUser>) success,
+      required Function(String) onError}) {
     Map body = Map();
     apiRequest.msRequest(APIFunction.USER_SUPPORT, body).then((response) {
       if (response.hasError()) {
@@ -115,9 +117,9 @@ class AccountProvider extends GetConnect {
     });
   }
 
-
   void faq(
-      {required Function(List<Faq>) success, required Function(String) onError}) {
+      {required Function(List<Faq>) success,
+      required Function(String) onError}) {
     Map body = Map();
     apiRequest.msRequest(APIFunction.USER_FAQ, body).then((response) {
       if (response.hasError()) {
@@ -171,6 +173,26 @@ class AccountProvider extends GetConnect {
         success();
       }
     }).onError((error, stackTrace) {
+      onError(error.toString());
+    });
+  }
+
+  void updateToken(
+      String token, Function() success, Function(String) onError) {
+    Map body = Map();
+    body['token'] = token;
+    body['id'] = userInstance.userId;
+
+    apiRequest
+        .msRequest(APIFunction.NOTIFICATION_UPDATE_TOKEN, body)
+        .then((response) {
+      if (response.hasError()) {
+        onError(response.errorDisplay());
+      } else {
+        success();
+      }
+    }).onError((error, stackTrace) {
+      print("on error : $error");
       onError(error.toString());
     });
   }

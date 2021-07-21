@@ -28,6 +28,8 @@ class TransactionSummary {
   double cashback = 0.0;
   double withdraw = 0.0;
   double available = 0.0;
+  double withdraw_process = 0.0;
+  double cashback_process = 0.0;
 
   TransactionSummary();
 
@@ -35,6 +37,9 @@ class TransactionSummary {
     cashback = json.doubleValue("cashback");
     withdraw = json.doubleValue("withdraw");
     available = json.doubleValue("available");
+    withdraw_process = json.doubleValue("withdraw_process");
+    cashback_process = json.doubleValue("cashback_process");
+
   }
 }
 

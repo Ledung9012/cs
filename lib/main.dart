@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:mobile/instance/app_instance.dart';
+import 'package:mobile/instance/fcm_instance.dart';
 import 'package:mobile/instance/templace_instance.dart';
 import 'package:mobile/modules/home/home_controller.dart';
 import 'package:mobile/modules/home/home_view.dart';
@@ -34,6 +35,8 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  fcm.initialize();
 
   app.initialize();
   app.loadConfig();

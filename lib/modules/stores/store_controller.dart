@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:mobile/models/category.dart';
 import 'package:mobile/models/store.dart';
+import 'package:mobile/modules/stores/info/store_info_view.dart';
 import 'package:mobile/modules/stores/store_detail/store_detail_controller.dart';
 import 'package:mobile/modules/stores/store_detail/store_detail_view.dart';
 import 'package:mobile/modules/stores/store_provider.dart';
@@ -43,13 +44,13 @@ class StoreController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    categoryMaster();
+    cateogory();
     index(selectedIndex);
   }
 
-  void categoryMaster() {
-    _provider.categoryMaster(
-        success: (value) {
+  void cateogory() {
+    _provider.category(
+        onSuccess: (value) {
           categories.clear();
           categories.addAll(value);
           selectIndex(0);
@@ -78,5 +79,11 @@ class StoreController extends GetxController {
     var detail = Get.put(StoreDetailController(item));
     detail.item = item;
     Get.to(StoreDetailView());
+  }
+
+
+  void info(int index){
+
+
   }
 }

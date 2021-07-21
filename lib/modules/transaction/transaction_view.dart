@@ -28,39 +28,127 @@ class TransactionView extends GetView<TransactionController> {
   Widget buildContent() {
     return Container(
       child: Column(
-        children: [sumary(), menu()],
+        children: [sumary(), pendingCashback(),SizedBox(height: 16,),pendingWithdraw(), menu()],
+      ),
+    );
+  }
+
+  Widget pendingCashback() {
+    return Container(
+      margin: EdgeInsets.only(left: 16, right: 16),
+      child: Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          color: Colors.green[50],
+        ),
+        child: Obx(() {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                      child: Text(
+                    "Hoàn tiền chờ duyệt",
+                    style: subTextStyle,
+                  )),
+                  Text(
+                    controller.cashback_process,
+                    style: TextStyle(
+                        color: Template.primaryColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700),
+                  )
+                ],
+              ),
+            ],
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget pendingWithdraw() {
+    return Container(
+      margin: EdgeInsets.only(left: 16, right: 16),
+      child: Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          color: Colors.orange[50],
+        ),
+        child: Obx(() {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                      child: Text(
+                        "Rút tiền chờ duyệt",
+                        style: subTextStyle,
+                      )),
+                  Text(
+                    controller.withdraw_process,
+                    style: TextStyle(
+                        color: Template.primaryColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700),
+                  )
+                ],
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
 
   Widget menu() {
     return Container(
-        margin: EdgeInsets.only( top: 24),
+        margin: EdgeInsets.only(top: 24),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: (){
+              onTap: () {
                 controller.goHistory();
               },
-              child: menuItem("Lịch sử giao dịch",
-                  Icon(Icons.history_rounded, color: Colors.white), Colors.red[400]!),
+              child: menuItem(
+                  "Lịch sử",
+                  Icon(Icons.history_rounded, color: Colors.white),
+                  Colors.red[400]!),
             ),
             GestureDetector(
               behavior: HitTestBehavior.translucent,
-
-              onTap: (){
-
+              onTap: () {
                 controller.goWithdraw();
               },
-              child: menuItem("Rút tiền",
-                  Icon(Icons.money_outlined, color: Colors.white), Colors.green[400]!),
+              child: menuItem(
+                  "Rút tiền",
+                  Icon(Icons.money_outlined, color: Colors.white),
+                  Colors.blue[400]!),
             ),
-            menuItem(
-                "Nhiệm vụ",
-                Icon(Icons.assignment_outlined, color: Colors.white),
-                Colors.purple[400]!),
+            GestureDetector(
+              onTap: (){
+                Template.dialogInfo("Tính năng nay đang được phát triển");
+              },
+              child: menuItem(
+                  "Nhiệm vụ",
+                  Icon(Icons.assignment_outlined, color: Colors.white),
+                  Colors.purple[400]!),
+            ),
+            GestureDetector(
+              onTap: (){
+                Template.dialogInfo("Tính năng nay đang được phát triển");
+              },
+              child: menuItem(
+                  "Cửa hàng",
+                  Icon(Icons.store_mall_directory_outlined, color: Colors.white),
+                  Colors.green[400]!),
+            ),
           ],
         ));
   }
@@ -106,7 +194,7 @@ class TransactionView extends GetView<TransactionController> {
         height: 148,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
-          color: Colors.green[50],
+          color: Colors.blue[50],
         ),
         child: Obx(() {
           return Column(

@@ -14,7 +14,7 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
       theme: ThemeData(primaryColor: Template.primaryColor),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: Template.appBar("Sổ địa chỉ"),
+        appBar: Template.appBar("Thay đổi mật khẩu"),
         body: buildContent(),
       ),
     );

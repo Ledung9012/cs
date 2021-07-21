@@ -41,9 +41,6 @@ class HomeController extends GetxController {
 
   loadView() {
     Get.put(AccountController());
-    Get.put(StoreController());
-    Get.put(ProductController());
-    Get.put(HelpCenterController());
     Get.put(FaqController());
 
     page.clear();
@@ -58,6 +55,7 @@ class HomeController extends GetxController {
     }
 
     if (app.enableInternalShopping) {
+      Get.put(ProductController());
       page.add(ProductView());
       barItems.add(bottomNavigationBarItem(
         icon: Icons.shopping_basket_outlined,
@@ -66,6 +64,7 @@ class HomeController extends GetxController {
     }
 
     if (app.enableStore || app.devMode) {
+      Get.put(StoreController());
       page.add(StoreView());
       barItems.add(bottomNavigationBarItem(
         icon: Icons.featured_play_list_outlined,
@@ -80,6 +79,7 @@ class HomeController extends GetxController {
     ));
 
     if (app.enableHelpCenter) {
+      Get.put(HelpCenterController());
       page.add(HelpCenterView());
       barItems.add(bottomNavigationBarItem(
         icon: Icons.help_center_outlined,
