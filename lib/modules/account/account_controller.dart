@@ -166,16 +166,25 @@ class AccountController extends GetxController {
   }
 
   void uploadImage(PickedFile pickerFile) {
+
+    print("uploadImage");
     UploadServices.upload(
         pickedFile: pickerFile,
         onSuccess: (value) {
+
+
+
           _accountProvider.updateImage(
               id: userInstance.userId,
               image: value.path,
               success: () {
                 this.image.value = value.path;
               },
-              onError: (value) {});
+              onError: (value) {
+
+
+
+              });
           print("Upload Success");
         });
   }

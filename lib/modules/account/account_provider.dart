@@ -54,6 +54,8 @@ class AccountProvider extends GetConnect {
     Map body = Map();
     body['id'] = id;
     body['image'] = image;
+
+    print("---------${APIFunction.USER_UPDATE_IMAGE}");
     apiRequest.msRequest(APIFunction.USER_UPDATE_IMAGE, body).then((response) {
       if (response.hasError()) {
         onError(response.message);

@@ -15,9 +15,6 @@ enum APIFunction {
   ADDRESS_CREATE,
   ADDRESS_DELETE,
 
-  //--------------------NOTIFICATION
-  NOTIFICATION_USER,
-
   //--------------------USER
   USER_REGISTER,
   USER_LOGIN,
@@ -31,7 +28,10 @@ enum APIFunction {
 
   //--------------------NOTIFICATION
   NOTIFICATION_UPDATE_TOKEN,
+  NOTIFICATION_USER,
 
+  //--------------------PROMOTION
+  PROMOTION_INDEX,
 
   //--------------------TRANSACTION
   TRANSACTION_SUMMARY,
@@ -47,12 +47,6 @@ enum APIFunction {
   STORE_INDEX,
   STORE_ORDER_HISTORY,
   STORE_ORDER_CREATE,
-
-
-  //--------------------CATEGORY
-
-
-
 
   //--------------------NEWS
   NEWS_CATEGORY,
@@ -160,7 +154,11 @@ class ApiRequest extends GetConnect {
       case APIFunction.FILE_UPLOAD:
         return "/upload";
 
-      //-------------------------------------------Metadata
+    //-------------------------------------------FILE UPLOAD
+      case APIFunction.PROMOTION_INDEX:
+        return "/promotion/index";
+
+    //-------------------------------------------Metadata
       case APIFunction.APP_CONFIG:
         return "/app/config";
 

@@ -7,7 +7,6 @@ import 'package:mobile/instance/fcm_instance.dart';
 import 'package:mobile/instance/templace_instance.dart';
 import 'package:mobile/modules/home/home_controller.dart';
 import 'package:mobile/modules/home/home_view.dart';
-import 'package:mobile/modules/news/news_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 class AppPages with WidgetsBindingObserver{

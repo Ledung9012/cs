@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:mobile/models/category.dart';
 import 'package:mobile/models/order.dart';
 import 'package:mobile/models/product.dart';
+import 'package:mobile/models/promotion.dart';
 import 'package:mobile/models/store.dart';
 import 'package:mobile/services/services.dart';
 
@@ -92,15 +93,29 @@ class StoreProvider extends GetConnect {
     });
   }
 
+   void promotion(
+      {required int id,
+        required Function(List<Promotion>) success,
+        required Function(String) onError}) {
+    Map body = Map();
+    body['id'] = id;
+    apiRequest
+        .msRequest(APIFunction.PROMOTION_INDEX, body)
+        .then((response) {
+      if (response.hasError()) {
+        onError(response.errorDisplay());
+      } else {
+        success(Promotion.list(response.data));
+      }
+    }).onError((error, stackTrace) {
+      onError("");
+    });
+  }
+
   static void orderCreate(
       {required OrderCreateRequest request,
       required Function() success,
       required Function(String) onError}) {
-
-
-
-    print("Order create ");
-
     Map body = Map();
     body['userId'] = request.userId;
     body['name'] = request.name;

@@ -49,7 +49,7 @@ class Transaction {
   }
 
   int id = 0;
-  double value = 0.0;
+  double commission = 0.0;
   int userId = -1;
   TransactionStatus status = TransactionStatus.NONE;
   TransactionType transactionType = TransactionType.NONE;
@@ -62,12 +62,12 @@ class Transaction {
     transactionType = json.stringValue("type").toEnum(TransactionType.values);
     status = json.stringValue("status").toEnum(TransactionStatus.values);
     userId = json.intValue("userId");
-    value = json.doubleValue("value");
+    commission = json.doubleValue("commission");
     createdAt = json.stringValue("created_at");
     targetName = json.stringValue("target_name");
   }
 
-  String get valueDisplay => value.currencyValue();
+  String get valueDisplay => commission.currencyValue();
 
   String dateDisplay() {
     if (DateTime.tryParse(createdAt) != null) {

@@ -49,6 +49,8 @@ class AppInstance with WidgetsBindingObserver {
   var enableNews = false;
   var enableHelpCenter = true;
   var enableNotification = true;
+  var enableCrossSearch = true;
+  var enablePromotion = true;
 
 
 
@@ -124,6 +126,8 @@ class AppInstance with WidgetsBindingObserver {
     enableNewsManagement = getMap("enableNewsManagement").boolValue("value");
     enableNews = getMap("enableNews").boolValue("value");
     enableNotification = getMap("enableNotification").boolValue("value");
+    enableCrossSearch = getMap("enableCrossSearch").boolValue("value");
+    enablePromotion = getMap("enablePromotion").boolValue("value");
 
     var homeController = Get.put(HomeController());
     homeController.loadConfigComplete = true;
@@ -155,6 +159,17 @@ class AppInstance with WidgetsBindingObserver {
         return "http://staging.cms.save365.vn/storage/";
       case Environment.PRODUCTION:
         return "http://cms.save365.vn/storage/";
+    }
+  }
+
+  String uploadURL() {
+    switch (environment) {
+      case Environment.DEVELOPMENT:
+        return "http://cashback.lolshop.vn/upload/";
+      case Environment.STAGING:
+        return "http://staging.cms.save365.vn/upload";
+      case Environment.PRODUCTION:
+        return "http://api.save365.vn/upload/";
     }
   }
 

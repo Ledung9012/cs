@@ -15,7 +15,8 @@ class Store {
     url = json['url'];
   }
 
-  Store(this.id, this.name);
+  Store(this.id, this.name,this.image);
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;

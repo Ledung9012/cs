@@ -7,6 +7,9 @@ import 'package:mobile/modules/center/faq/faq_controller.dart';
 import 'package:mobile/modules/center/help_center_controller.dart';
 import 'package:mobile/modules/center/help_center_view.dart';
 import 'package:mobile/modules/news/news_view.dart';
+import 'package:mobile/modules/promotion/promotion_controller.dart';
+import 'package:mobile/modules/promotion/promotion_view.dart';
+import 'package:mobile/modules/search/search_view.dart';
 import 'package:mobile/modules/stores/product/product_controller.dart';
 import 'package:mobile/modules/stores/product/product_view.dart';
 import 'package:mobile/modules/stores/store_controller.dart';
@@ -54,6 +57,25 @@ class HomeController extends GetxController {
       ));
     }
 
+    // if (app.enableCrossSearch) {
+    //   Get.put(ProductController());
+    //   page.add(SearchView());
+    //   barItems.add(bottomNavigationBarItem(
+    //     icon: Icons.saved_search,
+    //     label: 'Tìm kiếm',
+    //   ));
+    // }
+
+
+    if (app.enableCrossSearch) {
+      Get.put(PromotionController());
+      page.add(PromotionView());
+      barItems.add(bottomNavigationBarItem(
+        icon: Icons.card_giftcard_sharp,
+        label: 'Khuyến Mãi',
+      ));
+    }
+
     if (app.enableInternalShopping) {
       Get.put(ProductController());
       page.add(ProductView());
@@ -86,6 +108,9 @@ class HomeController extends GetxController {
         label: 'Trợ Giúp',
       ));
     }
+
+
+
 
     _loadConfigComplete.refresh();
   }

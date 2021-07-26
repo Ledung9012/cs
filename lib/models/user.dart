@@ -12,7 +12,6 @@ class CSUser {
   var phone = "";
   var avatar = "";
 
-
   CSUser({required this.id});
 
   CSUser.fromJson(Map<String, dynamic> json) {
